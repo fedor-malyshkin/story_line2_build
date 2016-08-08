@@ -1,3 +1,4 @@
 [submodule "token"]
 	path = token
-	url = ../story_line2_token.git
+	url = https://github.com/fedor-malyshkin/story_line2_token.git
+	
