@@ -1,0 +1,43 @@
+task readTestConfiguration (){
+	 apply from: 'deployment/config/configuration-test.gradle'
+}
+
+task readProductiveConfiguration (){
+}
+
+task provisionServers (){
+}
+
+task restartServices (){
+}
+
+// 'выполнить развертывание компонентов системы с учетом данных из ранее прочитанныъ конфигурационных файлов'
+task integrationTest () {
+}
+
+
+task 'deploy' {
+    dependsOn ':provisionServers', ':restartServices'
+}
+
+//
+
+// "выполнить развертывание в тестовой среде"
+task deployTest () {
+}
+
+// "выполнить развертывание в продуктивной среде"
+task deployProductive () {
+    dependsOn ':readProductiveConfiguration', ':deploy'
+}
+
+
+// "тестирование на сервер CI"
+task ciTest () {
+    dependsOn ':test', ':deployTest', ':integrationTest', ':clean'
+}
+
+// "выполнить развертывание в продуктивной среде"
+task ciDeploy {
+}
+

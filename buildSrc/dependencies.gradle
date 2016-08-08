@@ -1,0 +1,155 @@
+// project dependencies
+project(':server') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+		// https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core
+		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '0.9.3'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+		compile 'org.mongodb:mongodb-driver:3.2.2'
+		compile 'org.glassfish.jersey.core:jersey-client:2.+'
+		compile 'org.elasticsearch:elasticsearch:2.+'
+	}
+}
+
+project(':analyser') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+	    compile 'org.jsoup:jsoup:1.9.1'
+	}
+
+    dependencies {
+        compile project(':glr_parser')
+        compile project(':geo')
+    }
+}
+
+project(':geo') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+}
+
+project(':crawler') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+		compile 'commons-io:commons-io:2.4'
+	    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.2'
+		// https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core
+		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '0.9.3'
+		// https://mvnrepository.com/artifact/org.codehaus.groovy/groovy
+		compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.4.7'
+	    compile 'org.jsoup:jsoup:1.9.1'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+	}
+}
+
+
+project(':glr_parser_debugger') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+        compile 'org.apache.velocity:velocity:1.7'
+	}
+
+    dependencies {
+        compile project(':glr_parser')
+    }
+}
+
+project(':glr_parser_testing') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+		compile 'org.jsoup:jsoup:1.9.1'
+	}
+
+    dependencies {
+        compile project(':glr_parser')
+    }
+}
+
+project(':glr_parser') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+	    compile 'com.beust:jcommander:1.47'
+    	compile 'org.antlr:antlr4:4.3'
+		compile 'org.apache.commons:commons-collections4:4.1'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+	}
+
+    dependencies {
+        compile project(':token')
+        compile project(':morph')
+    }
+}
+
+project(':morph') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+//	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
+		compile 'commons-io:commons-io:2.4'
+		compile 'net.sf.ehcache:ehcache-core:2.6.10'
+		compile 'org.apache.commons:commons-lang3:3.3.2'
+		compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
+	}
+}
+
+project(':token') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+	    compile 'commons-io:commons-io:2.4'
+		compile 'org.apache.commons:commons-lang3:3.3.2'
+		compile 'org.apache.opennlp:opennlp-tools:1.5.3'
+	}
+}
+
+
+def javaProject(project) {
+	project.apply plugin: 'java'
+	project.apply plugin: 'eclipse'
+}
+
+def javaLogLibrary(project) {
+    project.repositories {
+        mavenCentral()
+    }
+    project.dependencies {
+		compile 'org.slf4j:slf4j-api:1.7.21'
+		compile 'ch.qos.logback:logback-classic:1.1.7'
+    }
+}
+
+def javaTestLibrary(project) {
+    project.repositories {
+        mavenCentral()
+    }
+    project.dependencies {
+		testCompile 'commons-io:commons-io:2.4'
+		testCompile "junit:junit:4.12"
+		testCompile 'org.mockito:mockito-core:2.0.54-beta'
+		testCompile 'org.hamcrest:hamcrest-core:1.3'
+    }
+
+}
