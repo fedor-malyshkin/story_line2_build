@@ -2,3 +2,30 @@
 	path = token
 	url = https://github.com/fedor-malyshkin/story_line2_token.git
 	
+[submodule "geo"]
+	path = geo
+	url = https://github.com/fedor-malyshkin/story_line2_geo.git
+[submodule "glt_parser"]
+	path = glt_parser
+	url = https://github.com/fedor-malyshkin/story_line2_glt_parser.git
+[submodule "glt_parser_debugger"]
+	path = glt_parser_debugger
+	url = https://github.com/fedor-malyshkin/story_line2_glt_parser_debugger.git
+[submodule "glt_parser_testing"]
+	path = glt_parser_testing
+	url = https://github.com/fedor-malyshkin/story_line2_glt_parser_testing.git
+[submodule "morph"]
+	path = morph
+	url = https://github.com/fedor-malyshkin/story_line2_morph.git
+[submodule "server"]
+	path = server
+	url = https://github.com/fedor-malyshkin/story_line2_server.git
+[submodule "crawler"]
+	path = crawler
+	url = https://github.com/fedor-malyshkin/story_line2_crawler.git
+[submodule "client-android"]
+	path = client-android
+	url = https://github.com/fedor-malyshkin/story_line2_client-android.git
+[submodule "analyser"]
+	path = analyser
+	url = https://github.com/fedor-malyshkin/story_line2_analyser.git
