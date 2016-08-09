@@ -103,7 +103,9 @@ project(':morph') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
+	gradleRelease(it)
 
+	
 	dependencies {
 //	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
 		compile 'commons-io:commons-io:2.4'
