@@ -42,7 +42,7 @@ task ciTest () {
 task ciDeploy {
 }
 
-
+/*
 def loadProjectProperties(Project prj) {
 	Properties props = new Properties()
 	if (new File("${prj.projectDir}/project.properties").exists()) {
@@ -50,20 +50,22 @@ def loadProjectProperties(Project prj) {
 	}
 	return  props;
 }
+*/
+
 
 // create per project files
 allprojects {
 	def prj = it
 
-	task 'gitByTagVersion'(type:Exec) {
-		def props = loadProjectProperties(prj)
+	task gitByTagVersion(type:Exec) {
+		// def props = loadProjectProperties(prj)
 		description "Create tag in local git by version in file"
   		workingDir prj.projectDir
   		//on linux
-  		commandLine "git",  "tag", "${props.version}", "--message=Gradle Release at ${new Date()}"
+  		commandLine "git",  "tag", "${version}", "--message=Gradle Release at ${new Date()}"
   	}
 
-	task 'gitPushTag'(type:Exec, dependsOn: gitByTagVersion) {
+	task gitPushTag(type:Exec, dependsOn: gitByTagVersion) {
 		description "Push tag in remote storage"
   		workingDir prj.projectDir
   		//on linux
@@ -73,4 +75,33 @@ allprojects {
 		dependsOn gitByTagVersion, gitPushTag
 		description "Make release of module"
 	}
+
+	// **** uploading
+	// upload to nexus/artifactory
+	apply plugin: 'maven-publish'
+	publishing {
+	    publications {
+	        mavenJava(MavenPublication) {
+				groupId project.groupId
+            	artifactId "${artifactId}"
+            	version "${version}"
+	            from components.java
+	        }
+	    }
+		repositories {
+	        maven {
+			/*
+	            credentials {
+	                username "anonymous"
+	            }
+				*/
+	            if(project.version.endsWith('-SNAPSHOT')) {
+	                url "file://tmp/libs-snapshot-local"
+	            } else {
+	                url "file://tmp/libs-release-local"
+	            }
+	        }
+	    }
+	}
+
 }

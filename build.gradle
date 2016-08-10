@@ -18,11 +18,13 @@ buildscript {
   	}
 }
 
+
+
+
 // apply plugins
 //apply plugin: "com.palantir.docker"
 //apply plugin: "com.palantir.docker-run"
 //apply plugin: "java"
-//apply plugin: "net.researchgate.release"
 
 // configure dependencies
 apply from: 'buildSrc/dependencies.gradle'
