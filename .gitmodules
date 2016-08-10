@@ -7,13 +7,13 @@
 	url = https://github.com/fedor-malyshkin/story_line2_geo.git
 [submodule "glr_parser"]
 	path = glr_parser
-	url = https://github.com/fedor-malyshkin/story_line2_glt_parser.git
+	url = https://github.com/fedor-malyshkin/story_line2_glr_parser.git
 [submodule "glr_parser_debugger"]
 	path = glr_parser_debugger
-	url = https://github.com/fedor-malyshkin/story_line2_glt_parser_debugger.git
+	url = https://github.com/fedor-malyshkin/story_line2_glr_parser_debugger.git
 [submodule "glr_parser_testing"]
 	path = glr_parser_testing
-	url = https://github.com/fedor-malyshkin/story_line2_glt_parser_testing.git
+	url = https://github.com/fedor-malyshkin/story_line2_glr_parser_testing.git
 [submodule "morph"]
 	path = morph
 	url = https://github.com/fedor-malyshkin/story_line2_morph.git
