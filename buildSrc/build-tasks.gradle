@@ -56,6 +56,8 @@ def loadProjectProperties(Project prj) {
 // create per project files
 allprojects {
 	def prj = it
+	// don't create these tasks for non-java projects (for this time)
+	if (!prj.ext.has("isJavaProject") ) return;
 
 	task gitByTagVersion(type:Exec) {
 		// def props = loadProjectProperties(prj)
@@ -65,16 +67,12 @@ allprojects {
   		commandLine "git",  "tag", "${version}", "--message=Gradle Release at ${new Date()}"
   	}
 
-	task gitPushTag(type:Exec, dependsOn: gitByTagVersion) {
+	task gitPushTag(type:Exec) {
 		description "Push tag in remote storage"
   		workingDir prj.projectDir
   		//on linux
   		commandLine "git",  "push" , "origin", "--tags"
   	}
-	task release {
-		dependsOn gitByTagVersion, gitPushTag
-		description "Make release of module"
-	}
 
 	// **** uploading
 	// upload to nexus/artifactory
@@ -82,26 +80,33 @@ allprojects {
 	publishing {
 	    publications {
 	        mavenJava(MavenPublication) {
-				groupId project.groupId
-            	artifactId "${artifactId}"
-            	version "${version}"
+				groupId 'ru.nlp_project.story_line2'
+            	artifactId artifactId
+				version prj.version
 	            from components.java
 	        }
 	    }
 		repositories {
 	        maven {
-			/*
 	            credentials {
-	                username "anonymous"
+	                username "deployment"
+					password "deployment"
 	            }
-				*/
 	            if(project.version.endsWith('-SNAPSHOT')) {
-	                url "file://tmp/libs-snapshot-local"
+	                url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
 	            } else {
-	                url "file://tmp/libs-release-local"
+	                url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
 	            }
 	        }
 	    }
 	}
+
+	// task install (dependsOn: 'publishLocal') {}
+
+	task release {
+		dependsOn  gitByTagVersion, gitPushTag, publish
+		description "Make release of module (assign tag, push tag to git, publish)"
+	}
+
 
 }

@@ -94,8 +94,8 @@ project(':glr_parser') {
 	}
 
     dependencies {
-        compile project(':token')
-        compile project(':morph')
+        compile 'ru.nlp_project.story_line2:token:0.1'
+        compile 'ru.nlp_project.story_line2:morph:0.1'
     }
 }
 
@@ -127,14 +127,21 @@ project(':token') {
 }
 
 def javaProject(project) {
+	project.ext.isJavaProject = true
 	project.apply plugin: 'java'
 	project.apply plugin: 'eclipse'
+
+	project.repositories {
+		jcenter {
+    		artifactUrls = ["http://192.168.1.99:8082/nexus/content/repositories/snapshots/",
+			"http://192.168.1.99:8082/nexus/content/repositories/releases/"]
+  		}
+		mavenCentral()
+		mavenLocal()
+    }
 }
 
 def javaLogLibrary(project) {
-    project.repositories {
-        mavenCentral()
-    }
     project.dependencies {
 		compile 'org.slf4j:slf4j-api:1.7.21'
 		compile 'ch.qos.logback:logback-classic:1.1.7'
@@ -142,9 +149,6 @@ def javaLogLibrary(project) {
 }
 
 def javaTestLibrary(project) {
-    project.repositories {
-        mavenCentral()
-    }
     project.dependencies {
 		testCompile 'commons-io:commons-io:2.4'
 		testCompile "junit:junit:4.12"
