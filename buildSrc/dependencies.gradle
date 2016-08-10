@@ -103,9 +103,8 @@ project(':morph') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
-	gradleRelease(it)
 
-	
+
 	dependencies {
 //	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
 		compile 'commons-io:commons-io:2.4'
@@ -119,8 +118,6 @@ project(':token') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
-	gradleRelease(it)
-
 
 	dependencies {
 	    compile 'commons-io:commons-io:2.4'
@@ -128,14 +125,6 @@ project(':token') {
 		compile 'org.apache.opennlp:opennlp-tools:1.5.3'
 	}
 }
-
-def gradleRelease(project) {
-	project.apply plugin: "net.researchgate.release"
-	project.release {
-  		failOnUnversionedFiles = true
-	}
-}
-
 
 def javaProject(project) {
 	project.apply plugin: 'java'
