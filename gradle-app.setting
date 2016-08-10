@@ -14,16 +14,16 @@
     </setting> 
   </setting>  
   <setting name="Application_window-id"> 
-    <setting name="window_x" value="-1"/>  
-    <setting name="window_y" value="-1"/>  
-    <setting name="window_width" value="1602"/>  
-    <setting name="window_height" value="878"/>  
+    <setting name="window_x" value="65"/>  
+    <setting name="window_y" value="24"/>  
+    <setting name="window_width" value="1855"/>  
+    <setting name="window_height" value="1056"/>  
     <setting name="extended-state" value="6"/> 
   </setting>  
-  <setting name="SinglePaneUIInstance_splitter-id">
-    <setting name="divider_location" value="483"/>
-  </setting>
-  <setting name="main_panel">
-    <setting name="current-tab" value="Task Tree"/>
-  </setting>
+  <setting name="SinglePaneUIInstance_splitter-id"> 
+    <setting name="divider_location" value="751"/> 
+  </setting>  
+  <setting name="main_panel"> 
+    <setting name="current-tab" value="Task Tree"/> 
+  </setting> 
 </root>
