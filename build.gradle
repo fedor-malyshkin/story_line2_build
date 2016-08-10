@@ -13,8 +13,8 @@ buildscript {
 	dependencies {
     	classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.7.2"
 		//classpath "net.researchgate:gradle-release:2.4.0"
-		# and look at 'http://stackoverflow.com/questions/32650444/how-to-install-or-publish-submodules-of-gradle-project-as-a-jar'
-		classpath "org.robovm:robovm-gradle-plugin:1.5.0"
+		//and look at 'http://stackoverflow.com/questions/32650444/how-to-install-or-publish-submodules-of-gradle-project-as-a-jar'
+		//classpath "org.robovm:robovm-gradle-plugin:1.5.0"
   	}
 }
 

@@ -1,3 +1,4 @@
+/*
 task readTestConfiguration (){
 	 apply from: 'deployment/config/configuration-test.gradle'
 }
@@ -39,4 +40,17 @@ task ciTest () {
 
 // "выполнить развертывание в продуктивной среде"
 task ciDeploy {
+}
+*/
+
+allprojects {
+	def prj = it
+	// println "${prj} ---- ${prj.projectDir}"
+	task 'gitRelease'(type:Exec) {
+  		workingDir prj.projectDir
+  		//on linux
+
+  		commandLine "echo",  "${prj.projectDir}"
+		// outputs.upToDateWhen { false }
+  	}
 }
