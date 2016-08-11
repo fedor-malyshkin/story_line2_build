@@ -59,15 +59,24 @@ allprojects {
 	// don't create these tasks for non-java projects (for this time)
 	if (!prj.ext.has("isJavaProject") ) return;
 
-	task gitByTagVersion(type:Exec) {
+	task gitByTagVersion(type:Exec)  {
 		// def props = loadProjectProperties(prj)
 		description "Create tag in local git by version in file"
-  		workingDir prj.projectDir
-  		//on linux
-  		commandLine "git",  "tag", "${version}", "--message=Gradle Release at ${new Date()}"
+		workingDir prj.projectDir
+		//on linux
+		commandLine "git",  "tag", "${prj.version}", "--message=Gradle Release at ${new Date()}"
+	}
+
+	// execute only in execution phase
+	gitByTagVersion.doFirst {
+		if(prj.version.endsWith('-SNAPSHOT')) {
+			def msg = "Cannot create release with version: ${prj.version}"
+			logger.error(msg)
+			throw new IllegalStateException(msg)
+		}
   	}
 
-	task gitPushTag(type:Exec) {
+	task gitPush(type:Exec) {
 		description "Push tag in remote storage"
   		workingDir prj.projectDir
   		//on linux
@@ -101,10 +110,19 @@ allprojects {
 	    }
 	}
 
-	// task install (dependsOn: 'publishLocal') {}
+	publishToMavenLocal.dependsOn build
+	task install (dependsOn: publishToMavenLocal) {
+		description "Install in local repo"
+	}
 
-	task release {
-		dependsOn  gitByTagVersion, gitPushTag, publish
+	task deploy (dependsOn: publish) {
+		description "Install in remote repo"
+	}
+
+
+	gitByTagVersion.dependsOn build
+	gitPush.dependsOn gitByTagVersion
+	task release (dependsOn: [gitPush, publish]) {
 		description "Make release of module (assign tag, push tag to git, publish)"
 	}
 

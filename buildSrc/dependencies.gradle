@@ -24,8 +24,8 @@ project(':analyser') {
 	}
 
     dependencies {
-        compile project(':glr_parser')
-        compile project(':geo')
+        compile 'ru.nlp_project.story_line2:glr_parser:0.1'
+        compile 'ru.nlp_project.story_line2:geo:0.1'
     }
 }
 
@@ -63,7 +63,7 @@ project(':glr_parser_debugger') {
 	}
 
     dependencies {
-        compile project(':glr_parser')
+        compile 'ru.nlp_project.story_line2:glr_parser:0.1'
     }
 }
 
@@ -77,12 +77,13 @@ project(':glr_parser_testing') {
 	}
 
     dependencies {
-        compile project(':glr_parser')
+		compile 'ru.nlp_project.story_line2:glr_parser:0.1'
     }
 }
 
 project(':glr_parser') {
 	javaProject(it)
+
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
@@ -132,9 +133,13 @@ def javaProject(project) {
 	project.apply plugin: 'eclipse'
 
 	project.repositories {
-		jcenter {
-    		artifactUrls = ["http://192.168.1.99:8082/nexus/content/repositories/snapshots/",
-			"http://192.168.1.99:8082/nexus/content/repositories/releases/"]
+		maven {
+			name "local-snapshots"
+			url  "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+  		}
+		maven {
+			name "local-releases"
+			url  "http://192.168.1.99:8082/nexus/content/repositories/releases/"
   		}
 		mavenCentral()
 		mavenLocal()
