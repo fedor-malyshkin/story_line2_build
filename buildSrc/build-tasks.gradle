@@ -1,56 +1,67 @@
+// тип стенда по-умолчанию может быть переопределён параметром к скрипту
+// gradle -Pproject.ext.stand_type=productive
+project.ext.stand_type='test'
+project.ext.stand_dir='test'
 
-task readTestConfiguration (){
-	 apply from: 'deployment/config/configuration-test.gradle'
-}
-
-task readProductiveConfiguration (){
-}
-
-task provisionServers (){
-}
-
-task restartServices (){
-}
-
-// 'выполнить развертывание компонентов системы с учетом данных из ранее прочитанныъ конфигурационных файлов'
-task integrationTest () {
-}
-
-
-task 'deploy' {
-    dependsOn ':provisionServers', ':restartServices'
-}
-
-//
-
-// "выполнить развертывание в тестовой среде"
-task deployTest () {
-}
-
-// "выполнить развертывание в продуктивной среде"
-task deployProductive () {
-    dependsOn ':readProductiveConfiguration', ':deploy'
-}
-
-
-// "тестирование на сервер CI"
-task ciTest () {
-    dependsOn ':deployTest', ':integrationTest'
-}
-
-// "выполнить развертывание в продуктивной среде"
-task ciDeploy {
-}
-
-/*
-def loadProjectProperties(Project prj) {
+// загрузить properties в зависимости от типа стенда
+def loadStandProperties(type) {
 	Properties props = new Properties()
-	if (new File("${prj.projectDir}/project.properties").exists()) {
-		props.load(new FileInputStream("${prj.projectDir}/project.properties"))
+	def name = "${projectDir}/deployment/config/${type}/stand.properties"
+	if (new File(name).exists()) {
+		props.load(new FileInputStream(name))
 	}
 	return  props;
 }
+
+/*
+метод для чтения свойств тестового стенда и присвоения их
+расширенным свойствам проекта "stand"
+WARN: метод используется в связке  "tasks.whenTaskAdded { Task task ->"
+для решения проблемы
+"Cannot get property 'stand' on extra properties extension as it does not exist"
+на фазе конфигурирования gradle скрипта
 */
+def readConfigurationMethod () {
+    def props = loadStandProperties(project.ext.stand_type)
+    project.ext.stand = props
+}
+
+// обработчик вызывающий метод при каждом определении задачи
+tasks.whenTaskAdded { Task task ->
+    readConfigurationMethod()
+}
+
+// create stand directory and store fullpath to 'project.ext.stand_dir'
+task createStandDir {
+	def dir = new File("/tmp/stand-${System.currentTimeMillis()}");
+	dir.mkdirs();
+	project.ext.stand_dir=dir.toString();
+}
+
+task provisionMongoDBCopyDockerfile(type: Copy, dependsOn: ['createStandDir']) {
+	from "${projectDir}/deployment/scripts/Dockerfile.mongodb"
+    into project.ext.stand_dir
+    expand(project.ext.stand)
+	filteringCharset = 'UTF-8'
+	rename { String fileName ->
+        fileName.replace('.mongodb', '')
+    }
+}
+
+task provisionMongoDB (dependsOn: ['provisionMongoDBCopyDockerfile']) {
+
+}
+
+task provisionContainers (dependsOn: ['provisionMongoDB']){
+
+}
+
+task startContainers (dependsOn: 'provisionContainers'){
+}
+
+task runStand (dependsOn: ['startContainers']) {
+	description "выполнить развертывание"
+}
 
 
 // create per project files
@@ -118,7 +129,6 @@ allprojects {
 	task deploy (dependsOn: publish) {
 		description "Install in remote repo"
 	}
-
 
 	gitByTagVersion.dependsOn build
 	gitPush.dependsOn gitByTagVersion
