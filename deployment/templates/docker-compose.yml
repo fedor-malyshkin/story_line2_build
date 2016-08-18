@@ -1,0 +1,9 @@
+version: '2'
+services:
+  mongodb:
+    build: ./mongodb
+    ports:
+     - "${mongodb_port}:${mongodb_port}"
+    volumes:
+     - ${data_dir}/mongodb:/data/db
+     - ${logs_dir}/mongodb.:/data/logs

@@ -1,14 +1,19 @@
 // тип стенда по-умолчанию может быть переопределён параметром к скрипту
-// gradle -Pproject.ext.stand_type=productive
+// gradle -Pproject.ext.stand_type=prod
 project.ext.stand_type='test'
 project.ext.stand_dir='test'
 
 // загрузить properties в зависимости от типа стенда
 def loadStandProperties(type) {
 	Properties props = new Properties()
-	def name = "${projectDir}/deployment/config/${type}/stand.properties"
+	def name = "${projectDir}/deployment/config/${type}.properties"
 	if (new File(name).exists()) {
 		props.load(new FileInputStream(name))
+	}
+	if (project.ext.stand_type == 'test') {
+		props.deploy_dir = props.deploy_dir + "_${System.currentTimeMillis()}"
+		props.data_dir = props.deploy_dir + "/data"
+		props.logs_dir = props.deploy_dir + "/logs"
 	}
 	return  props;
 }
@@ -22,7 +27,9 @@ WARN: метод используется в связке  "tasks.whenTaskAdded 
 на фазе конфигурирования gradle скрипта
 */
 def readConfigurationMethod () {
-    def props = loadStandProperties(project.ext.stand_type)
+	// проверка на предыдущую инициализацию
+	if (project.ext.has('stand')) return;
+	def props = loadStandProperties(project.ext.stand_type)
     project.ext.stand = props
 }
 
@@ -33,19 +40,22 @@ tasks.whenTaskAdded { Task task ->
 
 // create stand directory and store fullpath to 'project.ext.stand_dir'
 task createStandDir {
-	def dir = new File("/tmp/stand-${System.currentTimeMillis()}");
+	println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
+	def dir = new File(project.ext.stand.deploy_dir);
 	dir.mkdirs();
-	project.ext.stand_dir=dir.toString();
+	println "Create stand logs dir '${project.ext.stand.logs_dir}'"
+	dir = new File(project.ext.stand.logs_dir);
+	dir.mkdirs();
+	println "Create stand data dir '${project.ext.stand.data_dir}'"
+	dir = new File(project.ext.stand.data_dir);
+	dir.mkdirs();
 }
 
 task provisionMongoDBCopyDockerfile(type: Copy, dependsOn: ['createStandDir']) {
-	from "${projectDir}/deployment/scripts/Dockerfile.mongodb"
-    into project.ext.stand_dir
+	from "${projectDir}/deployment/templates"
+    into project.ext.stand.deploy_dir
     expand(project.ext.stand)
 	filteringCharset = 'UTF-8'
-	rename { String fileName ->
-        fileName.replace('.mongodb', '')
-    }
 }
 
 task provisionMongoDB (dependsOn: ['provisionMongoDBCopyDockerfile']) {
