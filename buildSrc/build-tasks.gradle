@@ -1,7 +1,7 @@
-// тип стенда по-умолчанию может быть переопределён параметром к скрипту
-// gradle -Pproject.ext.stand_type=prod
-project.ext.stand_type='test'
-project.ext.stand_dir='test'
+// тип стенда по-умолчанию
+// (может быть переопределён параметром к скрипту
+// 'gradle -Pproject.ext.stand_type=prod')
+project.ext.stand_type='dev'
 
 // загрузить properties в зависимости от типа стенда
 def loadStandProperties(type) {

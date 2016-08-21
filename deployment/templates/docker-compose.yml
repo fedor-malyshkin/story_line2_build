@@ -6,4 +6,11 @@ services:
      - "${mongodb_port}:${mongodb_port}"
     volumes:
      - ${data_dir}/mongodb:/data/db
-     - ${logs_dir}/mongodb.:/data/logs
+     - ${logs_dir}/mongodb:/data/logs
+  zookeeper:
+    build: ./zookeeper
+    ports:
+     - "${zookeeper_port}:${zookeeper_port}"
+    volumes:
+     - ${data_dir}/zookeeper:/data/db
+     - ${logs_dir}/zookeeper:/data/logs
