@@ -3,14 +3,21 @@ services:
   mongodb:
     build: ./mongodb
     ports:
-     - "${mongodb_port}:${mongodb_port}"
+     - "${mongodb_host_port ?: 27017}:${mongodb_cont_port ?: 27017}"
     volumes:
      - ${data_dir}/mongodb:/data/db
      - ${logs_dir}/mongodb:/data/logs
   zookeeper:
     build: ./zookeeper
     ports:
-     - "${zookeeper_port}:${zookeeper_port}"
+     - "${zookeeper_host_port ?: 2181}:${zookeeper_cont_port ?: 2181}"
     volumes:
      - ${data_dir}/zookeeper:/data/db
      - ${logs_dir}/zookeeper:/data/logs
+  elasticsearch:
+    build: ./elasticsearch
+    ports:
+     - "${elasticsearch_host_port ?: 9200}:${elasticsearch_cont_port ?: 9200}"
+    volumes:
+     - ${logs_dir}/elasticsearch:/data/logs
+     - ${data_dir}/elasticsearch:/data/db

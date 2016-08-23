@@ -44,26 +44,28 @@ task createStandDir {
 	def dir = new File(project.ext.stand.deploy_dir);
 	dir.mkdirs();
 	println "Create stand logs dir '${project.ext.stand.logs_dir}'"
-	dir = new File(project.ext.stand.logs_dir);
-	dir.mkdirs();
 	println "Create stand data dir '${project.ext.stand.data_dir}'"
-	dir = new File(project.ext.stand.data_dir);
-	dir.mkdirs();
+	// создать соотвествующие директории и выполнить настройку прав для всех УЗ
+	// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
+	['elasticsearch', 'zookeeper', 'mongodb'].each {
+		dir = new File(project.ext.stand.data_dir + "/${it}");
+		dir.mkdirs();
+		dir.setWritable(true, false);
+		dir.setExecutable(true, false);
+		dir.setReadable(true, false);
+		dir = new File(project.ext.stand.logs_dir + "/${it}");
+		dir.mkdirs();
+		dir.setWritable(true, false);
+		dir.setExecutable(true, false);
+		dir.setReadable(true, false);
+	}
 }
 
-task provisionMongoDBCopyDockerfile(type: Copy, dependsOn: ['createStandDir']) {
+task provisionContainers (type: Copy, dependsOn: ['createStandDir']){
 	from "${projectDir}/deployment/templates"
     into project.ext.stand.deploy_dir
     expand(project.ext.stand)
 	filteringCharset = 'UTF-8'
-}
-
-task provisionMongoDB (dependsOn: ['provisionMongoDBCopyDockerfile']) {
-
-}
-
-task provisionContainers (dependsOn: ['provisionMongoDB']){
-
 }
 
 task startContainers (dependsOn: 'provisionContainers'){
