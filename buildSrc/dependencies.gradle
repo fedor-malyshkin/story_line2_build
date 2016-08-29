@@ -49,21 +49,20 @@ project(':crawler') {
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
 	}
 
+	apply plugin: 'com.github.johnrengelman.shadow'
 
 	// Include dependent libraries in archive.
 	def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
 
-	jar {
-  		manifest {
-    		attributes "Main-Class": "$mainClassName"
-  		}
-
-  		from {
-    		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-  		}
-		// fix problem with signed jars
-		exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+	shadowJar {
+		mergeServiceFiles()
+	  	manifest {
+			attributes 'Description': 'This is an application JAR'
+	    	attributes "Main-Class": "$mainClassName"
+	 	}
 	}
+
+	shadowJar.dependsOn('build')
 }
 
 
