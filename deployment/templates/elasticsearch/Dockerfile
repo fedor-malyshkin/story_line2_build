@@ -5,7 +5,7 @@ MAINTAINER Fedor Malyshkin <fedor.malyshkin@yandex.ru>
 
 WORKDIR /elasticsearch
 # Installation:
-RUN apt-get update && apt-get install -y wget puppet
+RUN apt-get update && apt-get install -y wget puppet htop
 # Prepare by Puppet
 COPY elasticsearch.pp .
 RUN puppet apply elasticsearch.pp

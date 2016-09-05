@@ -93,7 +93,7 @@ allprojects {
 	// execute only in execution phase
 	gitByTagVersion.doFirst {
 		if(prj.version.endsWith('-SNAPSHOT')) {
-			def msg = "Cannot create release with version: ${prj.version}"
+			def msg = "Cannot create release with version: ${prj.version} (need set stable version in properties file)"
 			logger.error(msg)
 			throw new IllegalStateException(msg)
 		}
@@ -134,7 +134,7 @@ allprojects {
 	}
 
 	publishToMavenLocal.dependsOn build
-	task install (dependsOn: publishToMavenLocal) {
+	task deployLocal (dependsOn: publishToMavenLocal) {
 		description "Install in local repo"
 	}
 
@@ -145,6 +145,7 @@ allprojects {
 	gitByTagVersion.dependsOn build
 	gitPush.dependsOn gitByTagVersion
 	task release (dependsOn: [gitPush, publish]) {
+		//need to run "git config credential.helper store" in git project's directory
 		description "Make release of module (assign tag, push tag to git, publish)"
 	}
 

@@ -1,7 +1,7 @@
 [submodule "token"]
 	path = token
 	url = https://github.com/fedor-malyshkin/story_line2_token.git
-	
+
 [submodule "geo"]
 	path = geo
 	url = https://github.com/fedor-malyshkin/story_line2_geo.git
@@ -17,9 +17,6 @@
 [submodule "morph"]
 	path = morph
 	url = https://github.com/fedor-malyshkin/story_line2_morph.git
-[submodule "server"]
-	path = server
-	url = https://github.com/fedor-malyshkin/story_line2_server.git
 [submodule "crawler"]
 	path = crawler
 	url = https://github.com/fedor-malyshkin/story_line2_crawler.git
@@ -29,4 +26,9 @@
 [submodule "analyser"]
 	path = analyser
 	url = https://github.com/fedor-malyshkin/story_line2_analyser.git
-
+[submodule "server_web"]
+	path = server_web
+	url = https://github.com/fedor-malyshkin/story_line2_server_web.git
+[submodule "server_storm"]
+	path = server_storm
+	url = https://github.com/fedor-malyshkin/story_line2_server_storm.git

@@ -6,7 +6,7 @@ MAINTAINER Fedor Malyshkin <fedor.malyshkin@yandex.ru>
 WORKDIR /mongodb
 # Installation:
 # Update apt-get sources AND install MongoDB
-RUN apt-get update && apt-get install -y mongodb puppet
+RUN apt-get update && apt-get install -y mongodb puppet htop
 
 # Prepare by Puppet
 COPY mongodb.pp .

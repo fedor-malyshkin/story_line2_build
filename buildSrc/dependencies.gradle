@@ -1,17 +1,29 @@
 // project dependencies
-project(':server') {
+project(':server_web') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
 	dependencies {
-		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '0.9.3'
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
-		compile 'org.mongodb:mongodb-driver:3.2.2'
-		compile 'org.glassfish.jersey.core:jersey-client:2.+'
-		compile 'org.elasticsearch:elasticsearch:2.+'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
+		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
+		compile 'org.elasticsearch:elasticsearch:2.3.5'
 	}
 }
+
+project(':server_storm') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+		compile 'org.apache.storm:storm-core:1.0.2'
+		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
+		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
+		compile 'org.elasticsearch:elasticsearch:2.3.5'
+	}
+}
+
 
 project(':analyser') {
 	javaProject(it)
@@ -24,7 +36,7 @@ project(':analyser') {
 
     dependencies {
         compile 'ru.nlp_project.story_line2:glr_parser:0.1'
-        compile 'ru.nlp_project.story_line2:geo:0.1'
+        compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
     }
 }
 

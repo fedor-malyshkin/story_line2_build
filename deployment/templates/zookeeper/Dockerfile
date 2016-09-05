@@ -5,7 +5,7 @@ MAINTAINER Fedor Malyshkin <fedor.malyshkin@yandex.ru>
 
 WORKDIR /zookeeper
 # Installation:
-RUN apt-get update && apt-get install -y wget puppet
+RUN apt-get update && apt-get install -y wget puppet htop
 # Prepare by Puppet
 COPY zookeeper.pp .
 RUN puppet apply zookeeper.pp
