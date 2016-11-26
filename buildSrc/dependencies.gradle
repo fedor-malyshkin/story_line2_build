@@ -8,6 +8,7 @@ project(':server_web') {
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
 		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
 		compile 'org.elasticsearch:elasticsearch:2.3.5'
+		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.0.0'
 	}
 }
 
