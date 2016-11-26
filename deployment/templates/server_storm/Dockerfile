@@ -22,6 +22,7 @@ COPY monitrc /etc/
 VOLUME ['/data/db']
 VOLUME ['/data/logs']
 
+# for ports look - http://storm.apache.org/releases/1.0.2/SECURITY.html
 EXPOSE ${server_storm_ui_cont_port ?: 8080}
 EXPOSE ${server_storm_logviewer_cont_port ?: 8000}
 EXPOSE ${server_storm_nimbus_cont_port ?: 6627}
