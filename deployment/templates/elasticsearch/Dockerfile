@@ -12,7 +12,8 @@ RUN puppet apply elasticsearch.pp
 
 USER 'elastic'
 WORKDIR /elasticsearch
-RUN wget -nv --tries=3 https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${elasticsearch_version}/elasticsearch-${elasticsearch_version}.tar.gz \
+# RUN wget -nv --tries=3 https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${elasticsearch_version}/elasticsearch-${elasticsearch_version}.tar.gz \
+RUN wget -nv --tries=3 https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${elasticsearch_version}.tar.gz \
 && tar x --gunzip -f elasticsearch-${elasticsearch_version}.tar.gz && cd elasticsearch-${elasticsearch_version}
 
 # Prepare by Script

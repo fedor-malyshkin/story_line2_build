@@ -6,9 +6,10 @@ project(':server_web') {
 
 	dependencies {
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
-		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
-		compile 'org.elasticsearch:elasticsearch:2.3.5'
-		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.0.0'
+		compile 'org.mongodb:mongo-java-driver:3.3.0'
+		// compile 'org.elasticsearch:elasticsearch:5.1.1'
+		compile 'org.elasticsearch.client:transport:5.1.1'
+		compile 'io.dropwizard:dropwizard-core:1.0.5'
 	}
 }
 
@@ -23,8 +24,9 @@ project(':server_storm') {
 		exclude module: 'log4j-slf4j-impl'
 		}
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
-		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
-		compile 'org.elasticsearch:elasticsearch:2.3.5'
+		compile 'org.mongodb:mongo-java-driver:3.3.0'
+		// compile 'org.elasticsearch:elasticsearch:5.1.1'
+		compile 'org.elasticsearch.client:transport:5.1.1'
 	}
 }
 
@@ -56,11 +58,11 @@ project(':crawler') {
 	javaTestLibrary(it)
 
 	dependencies {
-		compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.3.0'
+		compile 'org.mongodb:mongo-java-driver:3.3.0'
 		compile 'commons-io:commons-io:2.4'
-	    compile group: 'edu.uci.ics', name: 'crawler4j', version: '4.2'
-		compile group: 'io.dropwizard', name: 'dropwizard-core', version: '1.0.0'
-		compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.4.7'
+	    compile 'edu.uci.ics:crawler4j:4.2'
+		compile 'io.dropwizard:dropwizard-core:1.0.5'
+		compile 'org.codehaus.groovy:groovy:2.4.7'
 	    compile 'org.jsoup:jsoup:1.9.1'
 		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
 	}
@@ -182,7 +184,7 @@ def javaLogLibrary(project) {
 		logback-core.jar in addition to logback-classic.jar on the classpath.
 		*/
 		compile 'org.slf4j:slf4j-api:1.7.21'
-		compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.7'
+		compile 'ch.qos.logback:logback-core:1.1.7'
 		compile 'ch.qos.logback:logback-classic:1.1.7'
     }
 }
