@@ -32,3 +32,6 @@
 [submodule "server_storm"]
 	path = server_storm
 	url = https://github.com/fedor-malyshkin/story_line2_server_storm.git
+[submodule "config"]
+	path = config
+	url = https://github.com/fedor-malyshkin/story_line2_config.git
