@@ -47,7 +47,7 @@ task createStandDir {
 	println "Create stand data dir '${project.ext.stand.data_dir}'"
 	// создать соотвествующие директории и выполнить настройку прав для всех УЗ
 	// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
-	['elasticsearch', 'zookeeper', 'mongodb'].each {
+	['elasticsearch', 'zookeeper', 'mongodb', 'server_storm', 'server_web'].each {
 		dir = new File(project.ext.stand.data_dir + "/${it}");
 		dir.mkdirs();
 		dir.setWritable(true, false);

@@ -12,7 +12,6 @@ RUN puppet apply elasticsearch.pp
 
 USER 'elastic'
 WORKDIR /elasticsearch
-# RUN wget -nv --tries=3 https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${elasticsearch_version}/elasticsearch-${elasticsearch_version}.tar.gz \
 RUN wget -nv --tries=3 https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${elasticsearch_version}.tar.gz \
 && tar x --gunzip -f elasticsearch-${elasticsearch_version}.tar.gz && cd elasticsearch-${elasticsearch_version}
 
@@ -23,8 +22,8 @@ COPY logging.yml elasticsearch-${elasticsearch_version}/config
 VOLUME ['/data/db']
 VOLUME ['/data/logs']
 
-# Expose port ${elasticsearch_cont_port ?: 2181} from the container to the host
-EXPOSE ${elasticsearch_cont_port ?: 2181}
+# Expose port ${elasticsearch_cont_port ?: 9200} from the container to the host
+EXPOSE ${elasticsearch_cont_port ?: 9200}
 
 
 ENTRYPOINT ["elasticsearch-${elasticsearch_version}/bin/elasticsearch"]

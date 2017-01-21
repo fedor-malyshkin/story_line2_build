@@ -1,15 +1,39 @@
 // project dependencies
+ext {
+VELOCITY_VER='1.7'
+JACKSON_VER='2.8.6'
+COMMONS_IO_VER='2.4'
+STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
+STORY_LINE2_CONFIG_VER='0.1'
+STORY_LINE2_MORPH_VER='0.2'
+DROPWIZARD_CORE_VER='1.0.5'
+JSOUP_VER='1.9.1'
+ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
+MONGO_JAVA_DRIVER_VER='3.3.0'
+DAGGER_VER='2.8'
+}
+
+project(':config') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+        compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+		compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${JACKSON_VER}"
+    }
+}
+
 project(':server_web') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
 	dependencies {
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
-		compile 'org.mongodb:mongo-java-driver:3.3.0'
-		// compile 'org.elasticsearch:elasticsearch:5.1.1'
-		compile 'org.elasticsearch.client:transport:5.1.1'
-		compile 'io.dropwizard:dropwizard-core:1.0.5'
+		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
+		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 	}
 }
 
@@ -18,15 +42,22 @@ project(':server_storm') {
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	apply plugin: "net.ltgt.apt"
 	dependencies {
 		compile ('org.apache.storm:storm-core:1.0.2') {
 		// log4j-slf4j-impl-2.1
 		exclude module: 'log4j-slf4j-impl'
 		}
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
-		compile 'org.mongodb:mongo-java-driver:3.3.0'
-		// compile 'org.elasticsearch:elasticsearch:5.1.1'
-		compile 'org.elasticsearch.client:transport:5.1.1'
+		compile 'de.undercouch:bson4jackson:2.7.0'
+		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
+		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
+		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+		// Dagger dependencies
+		compile "com.google.dagger:dagger:${DAGGER_VER}"
+		// Dagger dependencies
+		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
 }
 
@@ -37,11 +68,8 @@ project(':analyser') {
 	javaTestLibrary(it)
 
 	dependencies {
-	    compile 'org.jsoup:jsoup:1.9.1'
-	}
-
-    dependencies {
-        compile 'ru.nlp_project.story_line2:glr_parser:0.1'
+	    compile "org.jsoup:jsoup:${JSOUP_VER}"
+        compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
         compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
     }
 }
@@ -57,16 +85,22 @@ project(':crawler') {
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	// before dependencies with annotation processing
+	apply plugin: "net.ltgt.apt"
 	dependencies {
-		compile 'org.mongodb:mongo-java-driver:3.3.0'
-		compile 'commons-io:commons-io:2.4'
+		compile 'de.undercouch:bson4jackson:2.7.0'
+		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
+		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 	    compile 'edu.uci.ics:crawler4j:4.2'
-		compile 'io.dropwizard:dropwizard-core:1.0.5'
+		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile 'org.codehaus.groovy:groovy:2.4.7'
-	    compile 'org.jsoup:jsoup:1.9.1'
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.6'
+	    compile "org.jsoup:jsoup:${JSOUP_VER}"
+		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+		// Dagger dependencies
+		compile "com.google.dagger:dagger:${DAGGER_VER}"
+		// Dagger dependencies
+		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
-
 	apply plugin: 'com.github.johnrengelman.shadow'
 
 	// Include dependent libraries in archive.
@@ -90,11 +124,8 @@ project(':glr_parser_debugger') {
 	javaTestLibrary(it)
 
 	dependencies {
-        compile 'org.apache.velocity:velocity:1.7'
-	}
-
-    dependencies {
-        compile 'ru.nlp_project.story_line2:glr_parser:0.1'
+        compile "org.apache.velocity:velocity:${VELOCITY_VER}"
+        compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
     }
 }
 
@@ -104,30 +135,30 @@ project(':glr_parser_testing') {
 	javaTestLibrary(it)
 
 	dependencies {
-		compile 'org.jsoup:jsoup:1.9.1'
-	}
-
-    dependencies {
-		compile 'ru.nlp_project.story_line2:glr_parser:0.1'
+		compile "org.jsoup:jsoup:${JSOUP_VER}"
+		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
     }
 }
 
 project(':glr_parser') {
 	javaProject(it)
-
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	// before dependencies with annotation processing
+	apply plugin: "net.ltgt.apt"
 	dependencies {
 	    compile 'com.beust:jcommander:1.47'
     	compile 'org.antlr:antlr4:4.3'
 		compile 'org.apache.commons:commons-collections4:4.1'
-		compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
-	}
-
-    dependencies {
+		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
         compile 'ru.nlp_project.story_line2:token:0.1'
-        compile 'ru.nlp_project.story_line2:morph:0.1'
+        compile "ru.nlp_project.story_line2:morph:${STORY_LINE2_MORPH_VER}"
+		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
+		// Dagger dependencies
+		compile "com.google.dagger:dagger:${DAGGER_VER}"
+		// Dagger dependencies
+		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
     }
 }
 
@@ -139,10 +170,10 @@ project(':morph') {
 
 	dependencies {
 //	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
-		compile 'commons-io:commons-io:2.4'
+		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile 'net.sf.ehcache:ehcache-core:2.6.10'
 		compile 'org.apache.commons:commons-lang3:3.3.2'
-		compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
+		compile "com.fasterxml.jackson.core:jackson-core:${JACKSON_VER}"
 	}
 }
 
@@ -152,7 +183,7 @@ project(':token') {
 	javaTestLibrary(it)
 
 	dependencies {
-	    compile 'commons-io:commons-io:2.4'
+	    compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile 'org.apache.commons:commons-lang3:3.3.2'
 		compile 'org.apache.opennlp:opennlp-tools:1.5.3'
 	}
@@ -191,9 +222,9 @@ def javaLogLibrary(project) {
 
 def javaTestLibrary(project) {
     project.dependencies {
-		testCompile 'commons-io:commons-io:2.4'
+		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
 		testCompile "junit:junit:4.12"
-		testCompile 'org.mockito:mockito-core:2.0.54-beta'
+		testCompile 'org.mockito:mockito-core:2.5.7'
 		testCompile 'org.hamcrest:hamcrest-core:1.3'
     }
 

@@ -11,9 +11,12 @@ buildscript {
       		url "https://plugins.gradle.org/m2/"
     	}
   	}
-  	// shadow-plugin (http://imperceptiblethoughts.com/shadow/)
+
  	dependencies {
+		// shadow-plugin (http://imperceptiblethoughts.com/shadow/)
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+		// annotation processor https://plugins.gradle.org/plugin/net.ltgt.apt
+		classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
 	}
 }
 

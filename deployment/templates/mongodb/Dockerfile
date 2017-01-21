@@ -1,5 +1,5 @@
 # Format: FROM    repository[:version]
-FROM       ubuntu:latest
+FROM       ubuntu:xenial
 # Format: MAINTAINER Name <email@addr.ess>
 MAINTAINER Fedor Malyshkin <fedor.malyshkin@yandex.ru>
 
