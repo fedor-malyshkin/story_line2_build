@@ -214,9 +214,8 @@ def javaLogLibrary(project) {
 		Logback-classic module requires the presence of slf4j-api.jar and
 		logback-core.jar in addition to logback-classic.jar on the classpath.
 		*/
-		compile 'org.slf4j:slf4j-api:1.7.21'
-		compile 'ch.qos.logback:logback-core:1.1.7'
-		compile 'ch.qos.logback:logback-classic:1.1.7'
+		compile 'org.slf4j:slf4j-api:1.7.22'
+		compile 'ch.qos.logback:logback-classic:1.1.8'
     }
 }
 
