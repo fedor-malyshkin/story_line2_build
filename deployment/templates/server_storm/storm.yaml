@@ -15,7 +15,7 @@
 # limitations under the License.
 
 ########### These MUST be filled in for a storm configuration
-server_storm.config.file:  "/data/server_storm.yaml"
+server_storm.config.file:  "/data/db/server_storm_config.yaml"
 
 storm.zookeeper.servers:
      - "zookeeper"
@@ -46,9 +46,9 @@ nimbus.seeds: ["localhost"]
 # topology.kryo.decorators:
 #     - org.mycompany.MyDecorator
 #
-## Locations of the drpc servers
-# drpc.servers:
-#     - "server1"
+# Locations of the drpc servers
+drpc.servers:
+     - "localhost"
 #     - "server2"
 
 ## Metrics Consumers

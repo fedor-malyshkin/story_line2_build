@@ -1,4 +1,5 @@
 #!/bin/sh
+# Файл, запускаемый monit
 COMMAND=supervisor
 # flag-file to run supervisor in debug mode
 FILE=/server_storm/debug

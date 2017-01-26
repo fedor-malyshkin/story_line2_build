@@ -38,7 +38,7 @@ tasks.whenTaskAdded { Task task ->
     readConfigurationMethod()
 }
 
-// create stand directory and store fullpath to 'project.ext.stand_dir'
+// create stand directories
 task createStandDir {
 	println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
 	def dir = new File(project.ext.stand.deploy_dir);
@@ -61,20 +61,21 @@ task createStandDir {
 	}
 }
 
-task provisionContainers (type: Copy, dependsOn: ['createStandDir']){
+task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
+	description "выполнить копирование шаблонов"
 	from "${projectDir}/deployment/templates"
     into project.ext.stand.deploy_dir
     expand(project.ext.stand)
 	filteringCharset = 'UTF-8'
 }
 
-task startContainers (dependsOn: 'provisionContainers'){
+task startContainers (dependsOn: 'copyTemplates'){
+	description "запустить контейнеры"
 }
 
 task runStand (dependsOn: ['startContainers']) {
 	description "выполнить развертывание"
 }
-
 
 // create per project files
 allprojects {
@@ -108,6 +109,7 @@ allprojects {
 
 	// **** uploading
 	// upload to nexus/artifactory
+	// good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
 	apply plugin: 'maven-publish'
 	publishing {
 	    publications {

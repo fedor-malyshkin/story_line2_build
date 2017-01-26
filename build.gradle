@@ -14,7 +14,7 @@ buildscript {
 
  	dependencies {
 		// shadow-plugin (http://imperceptiblethoughts.com/shadow/)
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
 		// annotation processor https://plugins.gradle.org/plugin/net.ltgt.apt
 		classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
 	}

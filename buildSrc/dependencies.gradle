@@ -7,6 +7,8 @@ STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
 STORY_LINE2_CONFIG_VER='0.1'
 STORY_LINE2_MORPH_VER='0.2'
 DROPWIZARD_CORE_VER='1.0.5'
+JERSEY_VER='2.25.+'
+GRIZZLY_VER='2.3.28'
 JSOUP_VER='1.9.1'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
@@ -29,12 +31,38 @@ project(':server_web') {
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	apply plugin: "net.ltgt.apt"
+
 	dependencies {
-		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
-		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
-		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
+		compile "org.glassfish.jersey.containers:jersey-container-grizzly2-http:${JERSEY_VER}"
+		// compile "org.glassfish.jersey.media:jersey-media-json-jackson:${JERSEY_VER}"
+		compile "org.glassfish.grizzly:grizzly-http-server:${GRIZZLY_VER}"
+		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
+		compile ('org.apache.storm:storm-core:1.0.2') {
+		// log4j-slf4j-impl-2.1
+		exclude module: 'log4j-slf4j-impl'
+		}
+		// Dagger dependencies
+		compile "com.google.dagger:dagger:${DAGGER_VER}"
+		// Dagger dependencies
+		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
+
+	apply plugin: 'com.github.johnrengelman.shadow'
+
+	// Include dependent libraries in archive.
+	def mainClassName = "ru.nlp_project.story_line2.server_web.Application"
+
+	shadowJar {
+		mergeServiceFiles()
+	  	manifest {
+			attributes 'Description': 'This is an application JAR'
+	    	attributes "Main-Class": "$mainClassName"
+	 	}
+	}
+
+	// shadowJar.dependsOn('build')
+	build.dependsOn('shadowJar')
 }
 
 project(':server_storm') {
@@ -114,7 +142,8 @@ project(':crawler') {
 	 	}
 	}
 
-	shadowJar.dependsOn('build')
+	// shadowJar.dependsOn('build')
+	build.dependsOn('shadowJar')
 }
 
 
