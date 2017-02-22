@@ -35,3 +35,6 @@
 [submodule "config"]
 	path = config
 	url = https://github.com/fedor-malyshkin/story_line2_config.git
+[submodule "deployment"]
+	path = deployment
+	url = https://github.com/fedor-malyshkin/story_line2_deployment.git
