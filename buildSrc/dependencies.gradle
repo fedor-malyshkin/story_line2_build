@@ -7,12 +7,17 @@ STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
 STORY_LINE2_CONFIG_VER='0.1'
 STORY_LINE2_MORPH_VER='0.2'
 DROPWIZARD_CORE_VER='1.0.5'
+DROPWIZARD_METRICS_VER='3.1.0'
 JERSEY_VER='2.25.1'
 GRIZZLY_VER='2.3.28'
 JSOUP_VER='1.9.1'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
 DAGGER_VER='2.8'
+
+TEST_JUNIT_VER='4.12'
+TEST_MOCKITO_VER='2.7.9'
+TEST_ASSERTJ_VER='3.6.2'
 }
 
 project(':config') {
@@ -75,11 +80,13 @@ project(':server_storm') {
 
 	apply plugin: "net.ltgt.apt"
 	dependencies {
-		compile ('org.apache.storm:storm-core:1.0.2') {
+		compile ('org.apache.storm:storm-core:1.0.3') {
 		// log4j-slf4j-impl-2.1
 		exclude module: 'log4j-slf4j-impl'
 		}
+		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
+
 		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
@@ -93,7 +100,7 @@ project(':server_storm') {
 }
 
 
-project(':analyser') {
+/*project(':analyser') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
@@ -103,7 +110,7 @@ project(':analyser') {
         compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
         compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
     }
-}
+}*/
 
 project(':geo') {
 	javaProject(it)
@@ -119,11 +126,17 @@ project(':crawler') {
 	// before dependencies with annotation processing
 	apply plugin: "net.ltgt.apt"
 	dependencies {
+		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
+		// sheduler enging
+		compile 'org.quartz-scheduler:quartz:2.2.3'
+		// feed parser
+		compile 'com.rometools:rome:1.7.1'
 		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 	    compile 'edu.uci.ics:crawler4j:4.2'
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
+		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile 'org.codehaus.groovy:groovy:2.4.7'
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
@@ -144,7 +157,6 @@ project(':crawler') {
 	    	attributes "Main-Class": "$mainClassName"
 	 	}
 	}
-
 	// shadowJar.dependsOn('build')
 	build.dependsOn('shadowJar')
 }
@@ -254,9 +266,9 @@ def javaLogLibrary(project) {
 def javaTestLibrary(project) {
     project.dependencies {
 		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
-		testCompile "junit:junit:4.12"
-		testCompile 'org.mockito:mockito-core:2.5.7'
-		testCompile 'org.hamcrest:hamcrest-core:1.3'
+		testCompile "junit:junit:${TEST_JUNIT_VER}"
+		testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
+		testCompile  "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
     }
 
 }
