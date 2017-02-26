@@ -97,6 +97,46 @@ project(':server_storm') {
 		// Dagger dependencies
 		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
+
+	apply plugin: 'com.github.johnrengelman.shadow'
+	// Include dependent libraries in archive.
+	// def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
+
+	shadowJar {
+		mergeServiceFiles()
+	  	manifest {
+			attributes 'Description': 'This is an application JAR'
+	    	// attributes "Main-Class": "$mainClassName"
+	 	}
+	}
+
+	build.dependsOn('shadowJar')
+
+	apply plugin: 'maven-publish'
+	publishing {
+	    publications {
+	        mavenJava(MavenPublication) {
+				groupId 'ru.nlp_project.story_line2'
+            	artifactId artifactId
+				version it.version
+	            from components.shadow
+	        }
+	    }
+		repositories {
+	        maven {
+	            credentials {
+	                username "deployment"
+					password "deployment"
+	            }
+	            if(project.version.endsWith('-SNAPSHOT')) {
+					// publish only RELEASES
+					// url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+	            } else {
+	                url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+	            }
+	        }
+	    }
+	} // publishing
 }
 
 
@@ -157,10 +197,36 @@ project(':crawler') {
 	    	attributes "Main-Class": "$mainClassName"
 	 	}
 	}
-	// shadowJar.dependsOn('build')
-	build.dependsOn('shadowJar')
-}
 
+	build.dependsOn('shadowJar')
+
+	apply plugin: 'maven-publish'
+	publishing {
+	    publications {
+	        mavenJava(MavenPublication) {
+				groupId 'ru.nlp_project.story_line2'
+            	artifactId artifactId
+				version it.version
+	            from components.shadow
+	        }
+	    }
+		repositories {
+	        maven {
+	            credentials {
+	                username "deployment"
+					password "deployment"
+	            }
+	            if(project.version.endsWith('-SNAPSHOT')) {
+					// publish only RELEASES
+					// url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+	            } else {
+	                url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+	            }
+	        }
+	    }
+	} // publishing
+
+}
 
 project(':glr_parser_debugger') {
 	javaProject(it)

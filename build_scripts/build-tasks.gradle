@@ -1,0 +1,250 @@
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		// reading YAML
+		classpath "com.fasterxml.jackson.core:jackson-databind:2+"
+		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2+"
+	}
+}
+
+// тип стенда по-умолчанию
+// (может быть переопределён параметром к скрипту
+// 'gradle -Pproject.ext.stand_type=test')
+project.ext.stand_type='development'
+
+ext {
+	// образы, создаваемые docker'ом
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'server_storm', 'server_web']
+	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
+	docker_machines_w_artifacts = ['server_storm', 'server_web', 'crawler']
+}
+
+// загрузить properties в зависимости от типа стенда
+def loadStandProperties(type) {
+	Properties props = new Properties()
+	def name = "${projectDir}/deployment/${type}/docker.properties"
+	if (new File(name).exists()) {
+		props.load(new FileInputStream(name))
+	}
+	if (project.ext.stand_type == 'test') {
+		props.deploy_dir = props.deploy_dir + "_${System.currentTimeMillis()}"
+		props.data_dir = props.deploy_dir + "/data"
+		props.logs_dir = props.deploy_dir + "/logs"
+	}
+	return  props;
+}
+
+
+def loadVersions(type) {
+	Map result = new HashMap()
+	def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
+	if (new File(name).exists()) {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		result = mapper.readValue(new FileInputStream(name), HashMap.class);
+	}
+	return  result;
+}
+
+
+/*
+метод для чтения свойств тестового стенда и присвоения их
+расширенным свойствам проекта "stand"
+WARN: метод используется в связке  "tasks.whenTaskAdded { Task task ->"
+для решения проблемы
+"Cannot get property 'stand' on extra properties extension as it does not exist"
+на фазе конфигурирования gradle скрипта
+*/
+def readConfigurationMethod () {
+	// проверка на предыдущую инициализацию
+	if (project.ext.has('stand')) return;
+	def props = loadStandProperties(project.ext.stand_type)
+	project.ext.stand = props
+}
+
+// обработчик вызывающий метод при каждом определении задачи
+// нужен в связи с жизненным циклом задач gradle
+tasks.whenTaskAdded { Task task ->
+	readConfigurationMethod()
+}
+
+// create stand directories
+task createStandDir {
+	println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
+	def dir = new File(project.ext.stand.deploy_dir);
+	dir.mkdirs();
+	println "Create stand logs dir '${project.ext.stand.logs_dir}'"
+	println "Create stand data dir '${project.ext.stand.data_dir}'"
+	// создать соотвествующие директории и выполнить настройку прав для всех УЗ
+	// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
+	docker_machines.each {
+		dir = new File(project.ext.stand.data_dir + "/${it}");
+		dir.mkdirs();
+		dir.setWritable(true, false);
+		dir.setExecutable(true, false);
+		dir.setReadable(true, false);
+		dir = new File(project.ext.stand.logs_dir + "/${it}");
+		dir.mkdirs();
+		dir.setWritable(true, false);
+		dir.setExecutable(true, false);
+		dir.setReadable(true, false);
+	}
+}
+
+// выполнить копирование шаблонов для docker с подстановкой значений
+docker_machines.each { machine ->
+	task "copyProvisionScripts_${machine}" (type: Copy, dependsOn: ['createStandDir']){
+		description "выполнить копирование шаблонов"
+		from "${projectDir}/deployment"
+		exclude("${projectDir}/deployment/docker_templates/*")
+		exclude("docker_templates")
+		into project.ext.stand.deploy_dir + "/${machine}"
+	}
+}
+
+// выполнить копирование скриптов для подготовки сервера
+task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
+	description "выполнить копирование шаблонов"
+	from "${projectDir}/deployment/docker_templates"
+	into project.ext.stand.deploy_dir
+	expand(project.ext.stand)
+	filteringCharset = 'UTF-8'
+}
+
+
+task copyCurrentArtifacts () {
+	description "выполнить копирование необходимых артефактов"
+	def versions = loadVersions(project.ext.stand_type)
+	docker_machines_w_artifacts.each { machine ->
+		def res = getCurrentProjectBuild(machine, versions[machine])
+		if (res != null) {
+			// copy to "deploy_dir/machine/artifacts/same name.ext"
+			def dir = new File(project.ext.stand.deploy_dir + File.separator +
+				machine + File.separator + "artifacts")
+			dir.mkdirs();
+			def dst = new File(project.ext.stand.deploy_dir + File.separator +
+				machine + File.separator + "artifacts" + File.separator + res.name)
+			dst << res.bytes
+		}
+	}
+}
+// получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
+def getCurrentProjectBuild(projectName, version) {
+	if (version == "current") {
+		File libsDir =  project(":${projectName}").libsDir
+		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
+		if (allCollection.size != 0) return allCollection[0];
+		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
+		if (collection.size != 0) return collection[0];
+	}
+	return null
+}
+
+
+task startContainers (type:Exec, dependsOn: ['createStandDir', 'copyCurrentArtifacts', 'copyTemplates']){
+	description "запустить контейнеры"
+	workingDir project.ext.stand.deploy_dir
+	commandLine './docker_up.sh'
+}
+startContainers.dependsOn {
+    tasks.findAll { task -> task.name.startsWith('copyProvisionScripts') }
+}
+
+
+task runStand (dependsOn: ['startContainers']) {
+	description "выполнить развертывание стенда"
+}
+
+
+task stopStand (dependsOn: ['stopContainers']) {
+	description "выполнить 'сворачивание' стенда"
+}
+
+task stopContainers (type:Exec){
+	description "остановить контейнеры"
+	workingDir project.ext.stand.deploy_dir
+	commandLine './docker_down.sh'
+}
+
+// create per project files
+allprojects {
+	def prj = it
+	// don't create these tasks for non-java projects (for this time)
+	if (!prj.ext.has("isJavaProject") ) return;
+
+	task gitByTagVersion(type:Exec)  {
+		// def props = loadProjectProperties(prj)
+		description "Create tag in local git by version in file"
+		workingDir prj.projectDir
+		//on linux
+		commandLine "git",  "tag", "${prj.version}", "--message=Gradle Release at ${new Date()}"
+	}
+
+	// execute only in execution phase
+	gitByTagVersion.doFirst {
+		if(prj.version.endsWith('-SNAPSHOT')) {
+			def msg = "Cannot create release with version: ${prj.version} (need set stable version in properties file)"
+			logger.error(msg)
+			throw new IllegalStateException(msg)
+		}
+	}
+
+	task gitPush(type:Exec) {
+		description "Push tag in remote storage"
+		workingDir prj.projectDir
+		//on linux
+		commandLine "git",  "push" , "origin", "--tags"
+	}
+
+	// **** uploading
+	// upload to nexus/artifactory
+	// good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
+	if (project(':crawler') != prj && project(':server_storm') != prj) {
+		apply plugin: 'maven-publish'
+		publishing {
+			publications {
+				mavenJava(MavenPublication) {
+					groupId 'ru.nlp_project.story_line2'
+					artifactId artifactId
+					version prj.version
+					from components.java
+				}
+			}
+			repositories {
+				maven {
+					credentials {
+						username "deployment"
+						password "deployment"
+					}
+					if(project.version.endsWith('-SNAPSHOT')) {
+						url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+					}  else {
+						url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+					}
+				}
+			}
+		}
+	} // if (project(':crawler') != prj && project(':server_storm') != prj) {
+
+	publishToMavenLocal.dependsOn build
+	task deployLocal (dependsOn: publishToMavenLocal) {
+		description "Install in local repo"
+	}
+
+	task deploy (dependsOn: publish) {
+		description "Install in remote repo"
+	}
+
+
+	gitByTagVersion.dependsOn build
+	gitPush.dependsOn gitByTagVersion
+	task release (dependsOn: [gitPush, publish]) {
+		//need to run "git config credential.helper store" in git project's directory
+		description "Make release of module (assign tag, push tag to git, publish)"
+	}
+
+}

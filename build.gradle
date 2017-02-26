@@ -1,7 +1,7 @@
-apply plugin: 'build-dashboard'
+apply plugin: 'build-dashboard' // adds "buildDashboard" task
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
+    gradleVersion = '3.3'
 }
 
 buildscript {
@@ -22,6 +22,6 @@ buildscript {
 
 
 // configure dependencies
-apply from: 'buildSrc/dependencies.gradle'
-// apply plugins
-apply from: 'buildSrc/build-tasks.gradle'
+apply from: 'build_scripts/dependencies.gradle'
+// apply tasks
+apply from: 'build_scripts/build-tasks.gradle'
