@@ -39,7 +39,18 @@ def loadStandProperties(type) {
 	return  props;
 }
 
-
+/*
+In form:
+---
+# presented - for test/development only - use artifact from ""/provision/artifacts" directory
+storyline_componenets:
+  crawler:
+    version: "presented"
+  server_storm:
+    version: "presented"
+  server_web:
+    version: "presented"
+*/
 def loadVersions(type) {
 	Map result = new HashMap()
 	def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
@@ -47,7 +58,7 @@ def loadVersions(type) {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		result = mapper.readValue(new FileInputStream(name), HashMap.class);
 	}
-	return  result;
+	return  result['storyline_componenets'];
 }
 
 
@@ -122,22 +133,26 @@ task copyCurrentArtifacts () {
 	docker_machines_w_artifacts.each { machine ->
 		def res = getCurrentProjectBuild(machine, versions[machine])
 		if (res != null) {
-			// copy to "deploy_dir/machine/artifacts/same name.ext"
+			// copy to "deploy_dir/${machine}/artifacts/same name.ext"
 			def dir = new File(project.ext.stand.deploy_dir + File.separator +
 				machine + File.separator + "artifacts")
 			dir.mkdirs();
 			def dst = new File(project.ext.stand.deploy_dir + File.separator +
 				machine + File.separator + "artifacts" + File.separator + res.name)
+			println "Copy ${res} to ${dst}"
+			dst.delete()
 			dst << res.bytes
 		}
 	}
 }
 // получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
-def getCurrentProjectBuild(projectName, version) {
-	if (version == "current") {
+def getCurrentProjectBuild(projectName, machineObj) {
+	if (machineObj['version'] == "presented") {
+		// try first "*all.jar" (fatJar)
 		File libsDir =  project(":${projectName}").libsDir
 		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
 		if (allCollection.size != 0) return allCollection[0];
+		// try second "*.jar"
 		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
 		if (collection.size != 0) return collection[0];
 	}
