@@ -7,8 +7,8 @@ buildscript {
 	}
 	dependencies {
 		// reading YAML
-		classpath "com.fasterxml.jackson.core:jackson-databind:2+"
-		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2+"
+		classpath "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${JACKSON_VER}"
 	}
 }
 
@@ -19,9 +19,9 @@ project.ext.stand_type='development'
 
 ext {
 	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'server_storm', 'server_web']
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb']
 	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['server_storm', 'server_web', 'crawler']
+	docker_machines_w_artifacts = ['crawler']
 }
 
 // загрузить properties в зависимости от типа стенда
@@ -54,11 +54,12 @@ storyline_componenets:
 def loadVersions(type) {
 	Map result = new HashMap()
 	def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
+	println "Reading artifact versions from ${name}"
 	if (new File(name).exists()) {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		result = mapper.readValue(new FileInputStream(name), HashMap.class);
 	}
-	return  result['storyline_componenets'];
+	return  result['storyline_components'];
 }
 
 
@@ -120,10 +121,11 @@ docker_machines.each { machine ->
 // выполнить копирование скриптов для подготовки сервера
 task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	description "выполнить копирование шаблонов"
-	from "${projectDir}/deployment/docker_templates"
+	from "${projectDir}/deployment/docker_templates/*"
 	into project.ext.stand.deploy_dir
 	expand(project.ext.stand)
 	filteringCharset = 'UTF-8'
+
 }
 
 
@@ -159,16 +161,18 @@ def getCurrentProjectBuild(projectName, machineObj) {
 	return null
 }
 
+task prepareStand  (dependsOn: ['createStandDir', 'copyCurrentArtifacts', 'copyTemplates']){
+	description "подготовить контейнеры для ручного/автоматического запуска"
+}
+prepareStand.dependsOn {
+    tasks.findAll { task -> task.name.startsWith('copyProvisionScripts') }
+}
 
-task startContainers (type:Exec, dependsOn: ['createStandDir', 'copyCurrentArtifacts', 'copyTemplates']){
+task startContainers (type:Exec, dependsOn: ['prepareStand']){
 	description "запустить контейнеры"
 	workingDir project.ext.stand.deploy_dir
 	commandLine './docker_up.sh'
 }
-startContainers.dependsOn {
-    tasks.findAll { task -> task.name.startsWith('copyProvisionScripts') }
-}
-
 
 task runStand (dependsOn: ['startContainers']) {
 	description "выполнить развертывание стенда"
@@ -236,9 +240,9 @@ allprojects {
 						password "deployment"
 					}
 					if(project.version.endsWith('-SNAPSHOT')) {
-						url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
 					}  else {
-						url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
 					}
 				}
 			}
