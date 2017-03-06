@@ -132,7 +132,7 @@ project(':server_storm') {
 					// publish only RELEASES
 					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
 	            } else {
-	                url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
 	            }
 	        }
 	    }
@@ -220,7 +220,7 @@ project(':crawler') {
 					// publish only RELEASES
 					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
 	            } else {
-	                url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
 	            }
 	        }
 	    }
@@ -310,11 +310,11 @@ def javaProject(project) {
 
 		maven {
 			name "local-snapshots"
-			url  "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
   		}
 		maven {
 			name "local-releases"
-			url  "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
   		}
 		maven {
 			name "remote-snapshots"

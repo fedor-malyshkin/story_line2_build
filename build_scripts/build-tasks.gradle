@@ -241,9 +241,9 @@ allprojects {
 						password "deployment"
 					}
 					if(project.version.endsWith('-SNAPSHOT')) {
-						url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
+						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
 					}  else {
-						url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
+						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
 					}
 				}
 			}
