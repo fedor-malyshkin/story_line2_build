@@ -14,8 +14,9 @@ buildscript {
 
 // тип стенда по-умолчанию
 // (может быть переопределён параметром к скрипту
-// 'gradle -Pproject.ext.stand_type=test')
-project.ext.stand_type='development'
+// 'gradle -Pstand_type=test')
+if (!project.ext.has('stand_type'))
+	project.ext.stand_type='development'
 
 ext {
 	// образы, создаваемые docker'ом
@@ -240,9 +241,9 @@ allprojects {
 						password "deployment"
 					}
 					if(project.version.endsWith('-SNAPSHOT')) {
-						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+						url "http://192.168.1.99:8082/nexus/content/repositories/snapshots/"
 					}  else {
-						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+						url "http://192.168.1.99:8082/nexus/content/repositories/releases/"
 					}
 				}
 			}
