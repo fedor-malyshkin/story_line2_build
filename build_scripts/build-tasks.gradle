@@ -26,7 +26,7 @@ ext {
 }
 
 // загрузить properties в зависимости от типа стенда
-def loadStandProperties(type) {
+def loadDockerProperties(type) {
 	Properties props = new Properties()
 	def name = "${projectDir}/deployment/${type}/docker.properties"
 	if (new File(name).exists()) {
@@ -52,7 +52,7 @@ storyline_componenets:
   server_web:
     version: "presented"
 */
-def loadVersions(type) {
+def loadArtifactVersions(type) {
 	Map result = new HashMap()
 	def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
 	println "Reading artifact versions from ${name}"
@@ -72,79 +72,88 @@ WARN: метод используется в связке  "tasks.whenTaskAdded 
 "Cannot get property 'stand' on extra properties extension as it does not exist"
 на фазе конфигурирования gradle скрипта
 */
-def readConfigurationMethod () {
+def readStandConfiguration () {
 	// проверка на предыдущую инициализацию
 	if (project.ext.has('stand')) return;
-	def props = loadStandProperties(project.ext.stand_type)
+	def props = loadDockerProperties(project.ext.stand_type)
 	project.ext.stand = props
 }
 
 // обработчик вызывающий метод при каждом определении задачи
 // нужен в связи с жизненным циклом задач gradle
-tasks.whenTaskAdded { Task task ->
-	readConfigurationMethod()
-}
+// tasks.whenTaskAdded { Task task ->
+// 	readConfigurationMethod()
+// }
 
 // create stand directories
 task createStandDir {
-	println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
-	def dir = new File(project.ext.stand.deploy_dir);
-	dir.mkdirs();
-	println "Create stand logs dir '${project.ext.stand.logs_dir}'"
-	println "Create stand data dir '${project.ext.stand.data_dir}'"
-	// создать соотвествующие директории и выполнить настройку прав для всех УЗ
-	// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
-	docker_machines.each {
-		dir = new File(project.ext.stand.data_dir + "/${it}");
+	// with doLast - executes in execute pase (not in initialization/configaration)
+	doLast () {
+		readStandConfiguration()
+		println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
+		def dir = new File(project.ext.stand.deploy_dir);
 		dir.mkdirs();
-		dir.setWritable(true, false);
-		dir.setExecutable(true, false);
-		dir.setReadable(true, false);
-		dir = new File(project.ext.stand.logs_dir + "/${it}");
-		dir.mkdirs();
-		dir.setWritable(true, false);
-		dir.setExecutable(true, false);
-		dir.setReadable(true, false);
+		println "Create stand logs dir '${project.ext.stand.logs_dir}'"
+		println "Create stand data dir '${project.ext.stand.data_dir}'"
+		// создать соотвествующие директории и выполнить настройку прав для всех УЗ
+		// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
+		docker_machines.each {
+			dir = new File(project.ext.stand.data_dir + "/${it}");
+			dir.mkdirs();
+			dir.setWritable(true, false);
+			dir.setExecutable(true, false);
+			dir.setReadable(true, false);
+			dir = new File(project.ext.stand.logs_dir + "/${it}");
+			dir.mkdirs();
+			dir.setWritable(true, false);
+			dir.setExecutable(true, false);
+			dir.setReadable(true, false);
+		}
 	}
 }
 
 // выполнить копирование шаблонов для docker с подстановкой значений
 docker_machines.each { machine ->
 	task "copyProvisionScripts_${machine}" (type: Copy, dependsOn: ['createStandDir']){
-		description "выполнить копирование шаблонов"
-		from "${projectDir}/deployment"
-		exclude("${projectDir}/deployment/docker_templates/*")
-		exclude("docker_templates")
-		into project.ext.stand.deploy_dir + "/${machine}"
+		description "выполнить копирование provision-скриптов"
+		doLast() { // lambda executed only in execution phase
+			from "${projectDir}/deployment"
+			exclude("${projectDir}/deployment/docker_templates")
+			exclude("docker_templates")
+			into project.ext.stand.deploy_dir + "/${machine}"
+		}
 	}
 }
 
 // выполнить копирование скриптов для подготовки сервера
 task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	description "выполнить копирование шаблонов"
-	from "${projectDir}/deployment/docker_templates/*"
-	into project.ext.stand.deploy_dir
-	expand(project.ext.stand)
-	filteringCharset = 'UTF-8'
-
+	doLast() { // lambda executed only in execution phase
+		from "${projectDir}/deployment/docker_templates"
+		into project.ext.stand.deploy_dir
+		expand(project.ext.stand)
+		filteringCharset = 'UTF-8'
+	}
 }
 
 
-task copyCurrentArtifacts () {
+task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 	description "выполнить копирование необходимых артефактов"
-	def versions = loadVersions(project.ext.stand_type)
-	docker_machines_w_artifacts.each { machine ->
-		def res = getCurrentProjectBuild(machine, versions[machine])
-		if (res != null) {
-			// copy to "deploy_dir/${machine}/artifacts/same name.ext"
-			def dir = new File(project.ext.stand.deploy_dir + File.separator +
-				machine + File.separator + "artifacts")
-			dir.mkdirs();
-			def dst = new File(project.ext.stand.deploy_dir + File.separator +
-				machine + File.separator + "artifacts" + File.separator + res.name)
-			println "Copy ${res} to ${dst}"
-			dst.delete()
-			dst << res.bytes
+	doLast() { // lambda executed only in execution phase
+		def versions = loadArtifactVersions(project.ext.stand_type)
+		docker_machines_w_artifacts.each { machine ->
+			def res = getCurrentProjectBuild(machine, versions[machine])
+			if (res != null) {
+				// copy to "deploy_dir/${machine}/artifacts/same name.ext"
+				def dir = new File(project.ext.stand.deploy_dir + File.separator +
+					machine + File.separator + "artifacts")
+				dir.mkdirs();
+				def dst = new File(project.ext.stand.deploy_dir + File.separator +
+					machine + File.separator + "artifacts" + File.separator + res.name)
+				println "Copy ${res} to ${dst}"
+				dst.delete()
+				dst << res.bytes
+			}
 		}
 	}
 }
@@ -162,7 +171,7 @@ def getCurrentProjectBuild(projectName, machineObj) {
 	return null
 }
 
-task prepareStand  (dependsOn: ['createStandDir', 'copyCurrentArtifacts', 'copyTemplates']){
+task prepareStand  (dependsOn: ['copyCurrentArtifacts', 'copyTemplates']){
 	description "подготовить контейнеры для ручного/автоматического запуска"
 }
 prepareStand.dependsOn {
@@ -171,8 +180,10 @@ prepareStand.dependsOn {
 
 task startContainers (type:Exec, dependsOn: ['prepareStand']){
 	description "запустить контейнеры"
-	workingDir project.ext.stand.deploy_dir
-	commandLine './docker_up.sh'
+	doLast() { // lambda executed only in execution phase
+		workingDir project.ext.stand.deploy_dir
+		commandLine './docker_up.sh'
+	}
 }
 
 task runStand (dependsOn: ['startContainers']) {
@@ -186,8 +197,10 @@ task stopStand (dependsOn: ['stopContainers']) {
 
 task stopContainers (type:Exec){
 	description "остановить контейнеры"
-	workingDir project.ext.stand.deploy_dir
-	commandLine './docker_down.sh'
+	doLast() { // lambda executed only in execution phase
+		workingDir project.ext.stand.deploy_dir
+		commandLine './docker_down.sh'
+	}
 }
 
 // create per project files
