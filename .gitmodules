@@ -38,3 +38,6 @@
 [submodule "deployment"]
 	path = deployment
 	url = https://github.com/fedor-malyshkin/story_line2_deployment.git
+[submodule "crawler_scripts"]
+	path = crawler_scripts
+	url = https://github.com/fedor-malyshkin/story_line2_crawler_scripts.git
