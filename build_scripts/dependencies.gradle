@@ -228,6 +228,21 @@ project(':crawler') {
 
 }
 
+
+project(':crawler_scripts') {
+	javaProject(it)
+	javaLogLibrary(it)
+	javaTestLibrary(it)
+
+	dependencies {
+		testCompile 'org.codehaus.groovy:groovy:2.4.7'
+	    testCompile "org.jsoup:jsoup:${JSOUP_VER}"
+		testCompile 'edu.uci.ics:crawler4j:4.2'
+	}
+}
+
+
+
 project(':glr_parser_debugger') {
 	javaProject(it)
 	javaLogLibrary(it)
