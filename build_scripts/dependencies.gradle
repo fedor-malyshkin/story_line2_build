@@ -3,18 +3,23 @@ ext {
 VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
 COMMONS_IO_VER='2.4'
-STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
-STORY_LINE2_CONFIG_VER='0.1'
-STORY_LINE2_MORPH_VER='0.2'
 DROPWIZARD_CORE_VER='1.0.5'
 DROPWIZARD_METRICS_VER='3.1.0'
 JERSEY_VER='2.25.1'
 GRIZZLY_VER='2.3.28'
-JSOUP_VER='1.9.1'
+JSOUP_VER='1.10.2'
+JODATIME_VER='2.9.7'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
 DAGGER_VER='2.8'
-
+CRAWLER4J_VER='4.2'
+GROOVY_VER='2.4.7'
+// my
+STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
+STORY_LINE2_CONFIG_VER='0.1'
+STORY_LINE2_MORPH_VER='0.2'
+STORY_LINE2_TOKEN_VER='0.1'
+// test
 TEST_JUNIT_VER='4.12'
 TEST_MOCKITO_VER='2.7.9'
 TEST_ASSERTJ_VER='3.6.2'
@@ -174,10 +179,10 @@ project(':crawler') {
 		compile 'com.rometools:rome:1.7.1'
 		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-	    compile 'edu.uci.ics:crawler4j:4.2'
+	    compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
-		compile 'org.codehaus.groovy:groovy:2.4.7'
+		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
 		// Dagger dependencies
@@ -235,9 +240,11 @@ project(':crawler_scripts') {
 	javaTestLibrary(it)
 
 	dependencies {
-		testCompile 'org.codehaus.groovy:groovy:2.4.7'
+		testCompile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    testCompile "org.jsoup:jsoup:${JSOUP_VER}"
-		testCompile 'edu.uci.ics:crawler4j:4.2'
+		testCompile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
+		testCompile "org.jsoup:jsoup:${JSOUP_VER}"
+		testCompile "joda-time:joda-time:${JODATIME_VER}"
 	}
 }
 
@@ -277,7 +284,7 @@ project(':glr_parser') {
     	compile 'org.antlr:antlr4:4.3'
 		compile 'org.apache.commons:commons-collections4:4.1'
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-        compile 'ru.nlp_project.story_line2:token:0.1'
+        compile "ru.nlp_project.story_line2:token:${STORY_LINE2_TOKEN_VER}"
         compile "ru.nlp_project.story_line2:morph:${STORY_LINE2_MORPH_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		// Dagger dependencies
