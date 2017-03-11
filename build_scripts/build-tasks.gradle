@@ -1,3 +1,9 @@
+// обработчик вызывающий метод при каждом определении задачи
+// нужен в связи с жизненным циклом задач gradle
+// tasks.whenTaskAdded { Task task ->
+// 	readConfigurationMethod()
+// }
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 
@@ -7,37 +13,9 @@ buildscript {
 	}
 	dependencies {
 		// reading YAML
-		classpath "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${JACKSON_VER}"
+		classpath "com.fasterxml.jackson.core:jackson-databind:2.8.6"
+		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.6"
 	}
-}
-
-// тип стенда по-умолчанию
-// (может быть переопределён параметром к скрипту
-// 'gradle -Pstand_type=test')
-if (!project.ext.has('stand_type'))
-	project.ext.stand_type='development'
-
-ext {
-	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb']
-	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['crawler']
-}
-
-// загрузить properties в зависимости от типа стенда
-def loadDockerProperties(type) {
-	Properties props = new Properties()
-	def name = "${projectDir}/deployment/${type}/docker.properties"
-	if (new File(name).exists()) {
-		props.load(new FileInputStream(name))
-	}
-	if (project.ext.stand_type == 'test') {
-		props.deploy_dir = props.deploy_dir + "_${System.currentTimeMillis()}"
-		props.data_dir = props.deploy_dir + "/data"
-		props.logs_dir = props.deploy_dir + "/logs"
-	}
-	return  props;
 }
 
 /*
@@ -63,33 +41,31 @@ def loadArtifactVersions(type) {
 	return  result['storyline_components'];
 }
 
-
-/*
-метод для чтения свойств тестового стенда и присвоения их
-расширенным свойствам проекта "stand"
-WARN: метод используется в связке  "tasks.whenTaskAdded { Task task ->"
-для решения проблемы
-"Cannot get property 'stand' on extra properties extension as it does not exist"
-на фазе конфигурирования gradle скрипта
-*/
-def readStandConfiguration () {
-	// проверка на предыдущую инициализацию
-	if (project.ext.has('stand')) return;
-	def props = loadDockerProperties(project.ext.stand_type)
-	project.ext.stand = props
+// получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
+def getCurrentProjectBuild(projectName, machineObj) {
+	if (machineObj['version'] == "presented") {
+		// try first "*all.jar" (fatJar)
+		File libsDir =  project(":${projectName}").libsDir
+		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
+		if (allCollection.size != 0) return allCollection[0];
+		// try second "*.jar"
+		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
+		if (collection.size != 0) return collection[0];
+	}
+	return null
 }
 
-// обработчик вызывающий метод при каждом определении задачи
-// нужен в связи с жизненным циклом задач gradle
-// tasks.whenTaskAdded { Task task ->
-// 	readConfigurationMethod()
-// }
+ext {
+	// образы, создаваемые docker'ом
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler']
+	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
+	docker_machines_w_artifacts = ['crawler']
+}
 
 // create stand directories
 task createStandDir {
 	// with doLast - executes in execute pase (not in initialization/configaration)
 	doLast () {
-		readStandConfiguration()
 		println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
 		def dir = new File(project.ext.stand.deploy_dir);
 		dir.mkdirs();
@@ -116,24 +92,20 @@ task createStandDir {
 docker_machines.each { machine ->
 	task "copyProvisionScripts_${machine}" (type: Copy, dependsOn: ['createStandDir']){
 		description "выполнить копирование provision-скриптов"
-		doLast() { // lambda executed only in execution phase
-			from "${projectDir}/deployment"
-			exclude("${projectDir}/deployment/docker_templates")
-			exclude("docker_templates")
-			into project.ext.stand.deploy_dir + "/${machine}"
-		}
+		from "${projectDir}/deployment"
+		exclude("${projectDir}/deployment/docker_templates")
+		exclude("docker_templates")
+		into project.ext.stand.deploy_dir + "/${machine}"
 	}
 }
 
 // выполнить копирование скриптов для подготовки сервера
 task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	description "выполнить копирование шаблонов"
-	doLast() { // lambda executed only in execution phase
-		from "${projectDir}/deployment/docker_templates"
-		into project.ext.stand.deploy_dir
-		expand(project.ext.stand)
-		filteringCharset = 'UTF-8'
-	}
+	from "${projectDir}/deployment/docker_templates"
+	into project.ext.stand.deploy_dir
+	expand(project.ext.stand)
+	filteringCharset = 'UTF-8'
 }
 
 
@@ -157,19 +129,6 @@ task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 		}
 	}
 }
-// получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
-def getCurrentProjectBuild(projectName, machineObj) {
-	if (machineObj['version'] == "presented") {
-		// try first "*all.jar" (fatJar)
-		File libsDir =  project(":${projectName}").libsDir
-		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
-		if (allCollection.size != 0) return allCollection[0];
-		// try second "*.jar"
-		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
-		if (collection.size != 0) return collection[0];
-	}
-	return null
-}
 
 task prepareStand  (dependsOn: ['copyCurrentArtifacts', 'copyTemplates']){
 	description "подготовить контейнеры для ручного/автоматического запуска"
@@ -180,10 +139,8 @@ prepareStand.dependsOn {
 
 task startContainers (type:Exec, dependsOn: ['prepareStand']){
 	description "запустить контейнеры"
-	doLast() { // lambda executed only in execution phase
-		workingDir project.ext.stand.deploy_dir
-		commandLine './docker_up.sh'
-	}
+	workingDir project.ext.stand.deploy_dir
+	commandLine './docker_up.sh'
 }
 
 task runStand (dependsOn: ['startContainers']) {
@@ -197,10 +154,8 @@ task stopStand (dependsOn: ['stopContainers']) {
 
 task stopContainers (type:Exec){
 	description "остановить контейнеры"
-	doLast() { // lambda executed only in execution phase
-		workingDir project.ext.stand.deploy_dir
-		commandLine './docker_down.sh'
-	}
+	workingDir project.ext.stand.deploy_dir
+	commandLine './docker_down.sh'
 }
 
 // create per project files
