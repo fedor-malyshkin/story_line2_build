@@ -1,9 +1,3 @@
-// обработчик вызывающий метод при каждом определении задачи
-// нужен в связи с жизненным циклом задач gradle
-// tasks.whenTaskAdded { Task task ->
-// 	readConfigurationMethod()
-// }
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 
@@ -52,7 +46,7 @@ def getCurrentProjectBuild(projectName, machineObj) {
 		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
 		if (collection.size != 0) return collection[0];
 	}
-	return null
+	return null;
 }
 
 ext {
@@ -108,7 +102,7 @@ task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	filteringCharset = 'UTF-8'
 }
 
-
+// осуществить копирование артефактов - при наличии
 task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 	description "выполнить копирование необходимых артефактов"
 	doLast() { // lambda executed only in execution phase
@@ -130,7 +124,28 @@ task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 	}
 }
 
-task prepareStand  (dependsOn: ['copyCurrentArtifacts', 'copyTemplates']){
+// осуществить копирование scripts'оа для crawler
+task copyCrawlerScripts (dependsOn: ['createStandDir']) {
+	description "копирование scripts'оа для crawler"
+	doLast() { // lambda executed only in execution phase
+		def versions = loadArtifactVersions(project.ext.stand_type)
+		def res = getCurrentProjectBuild('crawler_scripts', versions['crawler_scripts'])
+		if (res != null) {
+			// copy to "deploy_dir/crawler/crawler_scripts/same name.ext"
+			def dir = new File(project.ext.stand.deploy_dir + File.separator +
+				"crawler/crawler_scripts")
+			dir.mkdirs();
+			def dst = new File(project.ext.stand.deploy_dir + File.separator +
+				"crawler/crawler_scripts" + File.separator + res.name)
+			println "Copy ${res} to ${dst}"
+			dst.delete()
+			dst << res.bytes
+		}
+	}
+}
+
+
+task prepareStand  (dependsOn: ['copyCurrentArtifacts', 'copyCrawlerScripts', 'copyTemplates']){
 	description "подготовить контейнеры для ручного/автоматического запуска"
 }
 prepareStand.dependsOn {
