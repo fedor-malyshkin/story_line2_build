@@ -4,7 +4,8 @@ VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
 COMMONS_IO_VER='2.4'
 DROPWIZARD_CORE_VER='1.0.5'
-DROPWIZARD_METRICS_VER='3.1.0'
+DROPWIZARD_METRICS_VER='1.1.8'
+DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
 JERSEY_VER='2.25.1'
 GRIZZLY_VER='2.3.28'
 JSOUP_VER='1.10.2'
@@ -181,6 +182,8 @@ project(':crawler') {
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 	    compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
+		compile "com.izettle:dropwizard-metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+		compile "com.github.davidb:metrics-influxdb:"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
