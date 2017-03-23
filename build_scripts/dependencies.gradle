@@ -108,6 +108,20 @@ project(':server_storm') {
 	// def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
 
 	shadowJar {
+		dependencies {
+      		exclude (dependency('org.apache.storm:storm-core'))
+			exclude (dependency('org.slf4j:slf4j-api'))
+			exclude (dependency('org.slf4j:log4j-over-slf4j'))
+			exclude (dependency('ch.qos.logback:logback-classic'))
+			exclude (dependency('ch.qos.logback:logback-core'))
+			exclude (dependency('org.clojure:clojure'))
+			exclude (dependency('org.apache.logging.log4j:log4j-slf4j-impl'))
+			exclude (dependency('org.apache.logging.log4j:log4j-core'))
+			exclude (dependency('org.apache.logging.log4j:log4j-api'))
+			exclude (dependency('javax.servlet:servlet-api'))
+			exclude (dependency('com.lmax:disruptor'))
+			exclude (dependency('com.esotericsoftware:kryo'))
+   		}
 		mergeServiceFiles()
 	  	manifest {
 			attributes 'Description': 'This is an application JAR'

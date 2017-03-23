@@ -110,7 +110,6 @@ task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 	description "выполнить копирование необходимых артефактов"
 	doLast() { // lambda executed only in execution phase
 		def versions = loadArtifactVersions(project.ext.stand_type)
-		println "${versions}"
 		docker_machines_w_artifacts.each { machine ->
 			def res = getCurrentProjectBuild(machine, versions[machine])
 			if (res != null) {
