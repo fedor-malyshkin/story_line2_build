@@ -45,15 +45,18 @@ def getCurrentProjectBuild(projectName, machineObj) {
 		// try second "*.jar"
 		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
 		if (collection.size != 0) return collection[0];
+		// в случае если не смогли ничего скопировать -это ошибка
+		throw new RuntimeException("Not found 'presented' artifacts for ${projectName}.")
 	}
 	return null;
+
 }
 
 ext {
 	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler']
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_storm']
 	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['crawler']
+	docker_machines_w_artifacts = ['crawler', 'server_storm']
 }
 
 // create stand directories
@@ -107,6 +110,7 @@ task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
 	description "выполнить копирование необходимых артефактов"
 	doLast() { // lambda executed only in execution phase
 		def versions = loadArtifactVersions(project.ext.stand_type)
+		println "${versions}"
 		docker_machines_w_artifacts.each { machine ->
 			def res = getCurrentProjectBuild(machine, versions[machine])
 			if (res != null) {

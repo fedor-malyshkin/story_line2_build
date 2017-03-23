@@ -75,7 +75,6 @@ project(':server_web') {
 	 	}
 	}
 
-	// shadowJar.dependsOn('build')
 	build.dependsOn('shadowJar')
 }
 
