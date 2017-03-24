@@ -209,7 +209,7 @@ allprojects {
 	// **** uploading
 	// upload to nexus/artifactory
 	// good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
-	if (project(':crawler') != prj && project(':server_storm') != prj) {
+	if (project(':crawler') != prj && project(':server_storm') != prj && project(':server_web') != prj) {
 		apply plugin: 'maven-publish'
 		publishing {
 			publications {

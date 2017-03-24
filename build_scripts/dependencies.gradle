@@ -76,6 +76,32 @@ project(':server_web') {
 	}
 
 	build.dependsOn('shadowJar')
+
+	apply plugin: 'maven-publish'
+	publishing {
+	    publications {
+	        mavenJava(MavenPublication) {
+				groupId 'ru.nlp_project.story_line2'
+	           	artifactId artifactId
+				version it.version
+	            from components.shadow
+	        }
+	    }
+		repositories {
+	        maven {
+	            credentials {
+	                username "deployment"
+					password "deployment"
+	            }
+	            if(project.version.endsWith('-SNAPSHOT')) {
+					// publish only RELEASES
+					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+	            } else {
+	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+	            }
+	        }
+	    }
+	} // publishing
 }
 
 project(':server_storm') {
