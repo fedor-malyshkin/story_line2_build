@@ -16,7 +16,7 @@ DAGGER_VER='2.8'
 CRAWLER4J_VER='4.2'
 GROOVY_VER='2.4.7'
 // my
-STORY_LINE2_GLR_PARSER_VER='0.5-SNAPSHOT'
+STORY_LINE2_GLR_PARSER_VER='0.5'
 STORY_LINE2_CONFIG_VER='0.2'
 STORY_LINE2_MORPH_VER='0.2'
 STORY_LINE2_TOKEN_VER='0.1'
@@ -123,6 +123,7 @@ project(':server_storm') {
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
 		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
 		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		// Dagger dependencies
 		compile "com.google.dagger:dagger:${DAGGER_VER}"
 		// Dagger dependencies
