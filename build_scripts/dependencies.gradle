@@ -6,9 +6,8 @@ COMMONS_IO_VER='2.4'
 DROPWIZARD_CORE_VER='1.0.5'
 DROPWIZARD_METRICS_VER='3.2.0'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
-JERSEY_VER='2.25.1'
-GRIZZLY_VER='2.3.28'
 JSOUP_VER='1.10.2'
+STORM_VER='1.0.3'
 JODATIME_VER='2.9.7'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
@@ -45,27 +44,35 @@ project(':server_web') {
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
-		// only temporary for 'JacksonRequestExecutorImpl'
-		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		// netty
-		compile "org.glassfish.jersey.containers:jersey-container-grizzly2-http:${JERSEY_VER}"
-		// compile "org.glassfish.jersey.media:jersey-media-json-jackson:${JERSEY_VER}"
-		compile "org.glassfish.grizzly:grizzly-http-server:${GRIZZLY_VER}"
+		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
+		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
-		compile ('org.apache.storm:storm-core:1.0.2') {
-		// log4j-slf4j-impl-2.1
-		exclude module: 'log4j-slf4j-impl'
+		compile ("org.apache.storm:storm-core:${STORM_VER}") {
+			// log4j-slf4j-impl-2.1
+			exclude module: 'log4j-slf4j-impl'
+			// exclude (dependency('org.apache.storm:storm-core'))
+			// exclude (dependency('org.slf4j:slf4j-api'))
+			// exclude (dependency('org.slf4j:log4j-over-slf4j'))
+			// exclude (dependency('ch.qos.logback:logback-classic'))
+			// exclude (dependency('ch.qos.logback:logback-core'))
+			// exclude (dependency('org.clojure:clojure'))
+			// exclude (dependency('org.apache.logging.log4j:log4j-slf4j-impl'))
+			// exclude (dependency('org.apache.logging.log4j:log4j-core'))
+			// exclude (dependency('org.apache.logging.log4j:log4j-api'))
+			// exclude (dependency('javax.servlet:servlet-api'))
+			// exclude (dependency('com.lmax:disruptor'))
+			// exclude (dependency('com.esotericsoftware:kryo'))
 		}
 		// Dagger dependencies
-		// compile "com.google.dagger:dagger:${DAGGER_VER}"
+		compile "com.google.dagger:dagger:${DAGGER_VER}"
 		// Dagger dependencies
-		// apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
+		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
-
 	apply plugin: 'com.github.johnrengelman.shadow'
 
 	// Include dependent libraries in archive.
-	def mainClassName = "ru.nlp_project.story_line2.server_web.Application"
+	def mainClassName = "ru.nlp_project.story_line2.server_web.ServerWebApplication"
 
 	shadowJar {
 		mergeServiceFiles()
@@ -82,7 +89,7 @@ project(':server_web') {
 	    publications {
 	        mavenJava(MavenPublication) {
 				groupId 'ru.nlp_project.story_line2'
-	           	artifactId artifactId
+            	artifactId artifactId
 				version it.version
 	            from components.shadow
 	        }
@@ -102,6 +109,7 @@ project(':server_web') {
 	        }
 	    }
 	} // publishing
+
 }
 
 project(':server_storm') {
@@ -111,9 +119,9 @@ project(':server_storm') {
 
 	apply plugin: "net.ltgt.apt"
 	dependencies {
-		compile ('org.apache.storm:storm-core:1.0.3') {
-		// log4j-slf4j-impl-2.1
-		exclude module: 'log4j-slf4j-impl'
+		compile ("org.apache.storm:storm-core:${STORM_VER}") {
+			// log4j-slf4j-impl-2.1
+			exclude module: 'log4j-slf4j-impl'
 		}
 		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
@@ -222,8 +230,8 @@ project(':crawler') {
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 	    compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
-		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
