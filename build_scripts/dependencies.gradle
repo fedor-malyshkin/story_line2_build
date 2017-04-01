@@ -3,8 +3,8 @@ ext {
 VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
 COMMONS_IO_VER='2.4'
-DROPWIZARD_CORE_VER='1.0.5'
-DROPWIZARD_METRICS_VER='3.2.0'
+DROPWIZARD_CORE_VER='1.1.0'
+DROPWIZARD_METRICS_VER='3.2.2'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
 JSOUP_VER='1.10.2'
 STORM_VER='1.0.3'
@@ -44,25 +44,24 @@ project(':server_web') {
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
+		//dropwizard testing
+		testCompile "io.dropwizard:dropwizard-testing:${DROPWIZARD_CORE_VER}"
+		// main
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		compile ("org.apache.storm:storm-core:${STORM_VER}") {
-			// log4j-slf4j-impl-2.1
-			exclude module: 'log4j-slf4j-impl'
-			// exclude (dependency('org.apache.storm:storm-core'))
-			// exclude (dependency('org.slf4j:slf4j-api'))
-			// exclude (dependency('org.slf4j:log4j-over-slf4j'))
-			// exclude (dependency('ch.qos.logback:logback-classic'))
-			// exclude (dependency('ch.qos.logback:logback-core'))
-			// exclude (dependency('org.clojure:clojure'))
-			// exclude (dependency('org.apache.logging.log4j:log4j-slf4j-impl'))
-			// exclude (dependency('org.apache.logging.log4j:log4j-core'))
-			// exclude (dependency('org.apache.logging.log4j:log4j-api'))
-			// exclude (dependency('javax.servlet:servlet-api'))
-			// exclude (dependency('com.lmax:disruptor'))
-			// exclude (dependency('com.esotericsoftware:kryo'))
+			exclude group: 'org.slf4j', module: 'slf4j-api'
+			exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
+			exclude group: 'ch.qos.logback', module: 'logback-classic'
+			exclude group: 'ch.qos.logback', module: 'logback-core'
+			exclude group: 'org.clojure', module: 'clojure'
+			exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+			exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
+			exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+			exclude group: 'com.lmax', module: 'disruptor'
+			exclude group: 'com.esotericsoftware', module: 'kryo'
 		}
 		// Dagger dependencies
 		compile "com.google.dagger:dagger:${DAGGER_VER}"
@@ -220,6 +219,10 @@ project(':crawler') {
 	// before dependencies with annotation processing
 	apply plugin: "net.ltgt.apt"
 	dependencies {
+		//dropwizard testing
+		testCompile "io.dropwizard:dropwizard-testing:${DROPWIZARD_CORE_VER}"
+
+		// main
 		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
 		// sheduler enging
