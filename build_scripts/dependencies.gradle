@@ -2,7 +2,8 @@
 ext {
 VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
-COMMONS_IO_VER='2.4'
+COMMONS_IO_VER='2.5'
+COMMONS_LANG_VER='3.5'
 DROPWIZARD_CORE_VER='1.1.0'
 DROPWIZARD_METRICS_VER='3.2.2'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
@@ -44,7 +45,7 @@ project(':server_web') {
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
-		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}" 
+		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
@@ -121,7 +122,8 @@ project(':server_storm') {
 		}
 		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
-
+		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
@@ -409,6 +411,7 @@ def javaLogLibrary(project) {
 
 def javaTestLibrary(project) {
     project.dependencies {
+		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
 		testCompile "junit:junit:${TEST_JUNIT_VER}"
 		testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
