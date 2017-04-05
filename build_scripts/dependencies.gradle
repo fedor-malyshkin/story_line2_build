@@ -45,6 +45,8 @@ project(':server_web') {
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
+		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
