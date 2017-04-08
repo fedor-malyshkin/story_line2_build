@@ -52,6 +52,7 @@ project(':server_web') {
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		compile ("org.apache.storm:storm-core:${STORM_VER}") {
+			exclude module: 'servlet-api'
 			exclude group: 'org.slf4j', module: 'slf4j-api'
 			exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
 			exclude group: 'ch.qos.logback', module: 'logback-classic'
