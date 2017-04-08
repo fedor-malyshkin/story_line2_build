@@ -4,6 +4,7 @@ VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
 COMMONS_IO_VER='2.5'
 COMMONS_LANG_VER='3.5'
+COMMONS_POOL_VER='2.4.2'
 DROPWIZARD_CORE_VER='1.1.0'
 DROPWIZARD_METRICS_VER='3.2.2'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
@@ -45,6 +46,7 @@ project(':server_web') {
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
+		compile "org.apache.commons:commons-pool2:${COMMONS_POOL_VER}"
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
