@@ -220,6 +220,11 @@ project(':crawler') {
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	// to find 'com.sleepycat:je'
+	repositories {
+		maven { url "http://download.oracle.com/maven" }
+	}
+
 	// before dependencies with annotation processing
 	apply plugin: "net.ltgt.apt"
 	dependencies {
@@ -232,7 +237,8 @@ project(':crawler') {
 		compile 'com.rometools:rome:1.7.1'
 		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-	    compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
+		compile "ru.nlp_project.story_line2:crawler4j:4.4.0"
+	    //compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
 		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
