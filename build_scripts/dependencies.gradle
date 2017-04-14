@@ -125,8 +125,11 @@ project(':server_storm') {
 			// log4j-slf4j-impl-2.1
 			exclude module: 'log4j-slf4j-impl'
 		}
+		compile "joda-time:joda-time:${JODATIME_VER}"
 		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
+		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
