@@ -17,7 +17,7 @@ DAGGER_VER='2.8'
 CRAWLER4J_VER='4.2'
 GROOVY_VER='2.4.7'
 // my
-STORY_LINE2_GLR_PARSER_VER='0.5'
+STORY_LINE2_GLR_PARSER_VER='0.6'
 STORY_LINE2_CONFIG_VER='0.2'
 STORY_LINE2_MORPH_VER='0.4'
 STORY_LINE2_TOKEN_VER='0.1'
@@ -126,8 +126,7 @@ project(':server_storm') {
 			exclude module: 'log4j-slf4j-impl'
 		}
 		compile "joda-time:joda-time:${JODATIME_VER}"
-		// BSON Jackson mapper
-		compile 'de.undercouch:bson4jackson:2.7.0'
+
 		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
