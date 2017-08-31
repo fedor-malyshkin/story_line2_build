@@ -12,3 +12,6 @@
 *.factorypath
 /.classpath
 /.project
+/.idea
+/*.iml
+
