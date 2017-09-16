@@ -8,14 +8,14 @@ COMMONS_POOL_VER='2.4.2'
 DROPWIZARD_CORE_VER='1.1.0'
 DROPWIZARD_METRICS_VER='3.2.2'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
-JSOUP_VER='1.10.2'
+JSOUP_VER='1.10.3'
 STORM_VER='1.0.3'
 JODATIME_VER='2.9.7'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
 DAGGER_VER='2.8'
 CRAWLER4J_VER='4.2'
-GROOVY_VER='2.4.7'
+GROOVY_VER='2.4.12'
 // my
 STORY_LINE2_GLR_PARSER_VER='0.6'
 STORY_LINE2_CONFIG_VER='0.2'
@@ -303,12 +303,12 @@ project(':crawler_scripts') {
 	javaTestLibrary(it)
 
 	dependencies {
-		testCompile "org.codehaus.groovy:groovy:${GROOVY_VER}"
-		testCompile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
-		testCompile "org.jsoup:jsoup:${JSOUP_VER}"
-		testCompile "joda-time:joda-time:${JODATIME_VER}"
-		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
+		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+		compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
+		compile "org.jsoup:jsoup:${JSOUP_VER}"
+		compile "joda-time:joda-time:${JODATIME_VER}"
+		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 	}
 }
 
