@@ -9,7 +9,7 @@ DROPWIZARD_CORE_VER='1.1.0'
 DROPWIZARD_METRICS_VER='3.2.2'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
 JSOUP_VER='1.10.3'
-STORM_VER='1.0.3'
+STORM_VER='1.1.1'
 JODATIME_VER='2.9.7'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.3.0'
@@ -43,9 +43,17 @@ project(':server_web') {
 	javaLogLibrary(it)
 	javaTestLibrary(it)
 
+	// to find 'ring-cors:ring-cors:0.+'
+	repositories {
+		maven { url "http://clojars.org/repo" }
+	}
+
 	apply plugin: "net.ltgt.apt"
 
 	dependencies {
+		// https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
+		compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
 		compile "org.apache.commons:commons-pool2:${COMMONS_POOL_VER}"
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
@@ -65,6 +73,7 @@ project(':server_web') {
 			exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
 			exclude group: 'com.lmax', module: 'disruptor'
 			exclude group: 'com.esotericsoftware', module: 'kryo'
+			exclude group: 'ring-cors', module: 'ring-cors'
 		}
 		// Dagger dependencies
 		compile "com.google.dagger:dagger:${DAGGER_VER}"
@@ -118,6 +127,11 @@ project(':server_storm') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
+
+	// to find 'ring-cors:ring-cors:0.+'
+	repositories {
+		maven { url "http://clojars.org/repo" }
+	}
 
 	apply plugin: "net.ltgt.apt"
 	dependencies {
