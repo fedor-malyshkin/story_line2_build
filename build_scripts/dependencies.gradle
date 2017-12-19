@@ -6,7 +6,7 @@ COMMONS_IO_VER='2.5'
 COMMONS_LANG_VER='3.5'
 COMMONS_POOL_VER='2.4.2'
 DROPWIZARD_CORE_VER='1.1.0'
-DROPWIZARD_METRICS_VER='3.2.2'
+DROPWIZARD_METRICS_VER='3.2.5'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
 JSOUP_VER='1.10.3'
 STORM_VER='1.1.1'
@@ -16,6 +16,7 @@ MONGO_JAVA_DRIVER_VER='3.3.0'
 DAGGER_VER='2.8'
 CRAWLER4J_VER='4.2'
 GROOVY_VER='2.4.12'
+SPRING_BOOT_STARTER_VER='1.5.9.RELEASE'
 // my
 STORY_LINE2_GLR_PARSER_VER='0.6'
 STORY_LINE2_CONFIG_VER='0.2'
@@ -42,25 +43,28 @@ project(':server_web') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
+	javaSpringBootProject(it)
 
 	// to find 'ring-cors:ring-cors:0.+'
 	repositories {
 		maven { url "http://clojars.org/repo" }
 	}
 
-	apply plugin: "net.ltgt.apt"
+	// apply plugin: "net.ltgt.apt"
 
 	dependencies {
 		// https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
 		compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
-
+		// spring cache
+		compile("org.springframework:spring-context-support")
+		compile "javax.cache:cache-api:1.0.0"
+		compile "org.ehcache:ehcache:3.4.0"
 		compile "org.apache.commons:commons-pool2:${COMMONS_POOL_VER}"
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
-		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
 		compile ("org.apache.storm:storm-core:${STORM_VER}") {
 			exclude module: 'servlet-api'
 			exclude group: 'org.slf4j', module: 'slf4j-api'
@@ -75,25 +79,18 @@ project(':server_web') {
 			exclude group: 'com.esotericsoftware', module: 'kryo'
 			exclude group: 'ring-cors', module: 'ring-cors'
 		}
-		// Dagger dependencies
-		compile "com.google.dagger:dagger:${DAGGER_VER}"
-		// Dagger dependencies
-		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
-	apply plugin: 'com.github.johnrengelman.shadow'
-
-	// Include dependent libraries in archive.
 	def mainClassName = "ru.nlp_project.story_line2.server_web.ServerWebApplication"
 
-	shadowJar {
-		mergeServiceFiles()
-	  	manifest {
-			attributes 'Description': 'This is an application JAR'
-	    	attributes "Main-Class": "$mainClassName"
-	 	}
-	}
 
-	build.dependsOn('shadowJar')
+	bootRepackage {
+		// enable repackaging in uber/fat jar
+	    enabled = true
+	}
+	springBoot {
+		// remove small jar file with only project classes
+	    backupSource = false
+	}
 
 	apply plugin: 'maven-publish'
 	publishing {
@@ -102,7 +99,7 @@ project(':server_web') {
 				groupId 'ru.nlp_project.story_line2'
             	artifactId artifactId
 				version it.version
-	            from components.shadow
+	            from components.java
 	        }
 	    }
 		repositories {
@@ -120,7 +117,8 @@ project(':server_web') {
 	        }
 	    }
 	} // publishing
-
+	//	run bootRepackage ahead with removing small jar
+	publish.dependsOn = ['bootRepackage']
 }
 
 project(':server_storm') {
@@ -402,7 +400,6 @@ project(':token') {
 def javaProject(project) {
 	project.ext.isJavaProject = true
 	project.apply plugin: 'java'
-	project.apply plugin: 'eclipse'
 
 	project.repositories {
 		mavenCentral()
@@ -447,4 +444,22 @@ def javaTestLibrary(project) {
 		testCompile  "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
     }
 
+}
+
+def javaSpringBootProject(project) {
+	project.apply plugin: 'org.springframework.boot'
+    project.dependencies {
+		compile("org.springframework.boot:spring-boot-starter-web") {
+			exclude module: "spring-boot-starter-tomcat"
+		}
+		compile("org.springframework.boot:spring-boot-starter-jetty")
+		// end::jetty[]
+		// tag::actuator[]
+		compile("org.springframework.boot:spring-boot-starter-actuator")
+		// end::actuator[]
+		// testCompile("org.springframework.boot:spring-boot-starter-test")
+		testCompile("org.springframework.boot:spring-boot-test")
+		testCompile("org.springframework.boot:spring-boot-test-autoconfigure")
+		testCompile("org.springframework:spring-test")
+	}
 }

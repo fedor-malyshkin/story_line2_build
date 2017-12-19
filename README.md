@@ -5,6 +5,7 @@
 * [Конфигурирование](docs/configuration.md)
 * [Проектирование](docs/implementation_design.md)
 * [CI/CD](docs/ci_cd.md)
+* [Метрики](docs/metrics.md)
 
 Данная часть пректа содежит в себе следующее:
 - данные о зависимостях;
