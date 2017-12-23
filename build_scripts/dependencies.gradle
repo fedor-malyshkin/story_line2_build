@@ -50,10 +50,7 @@ project(':server_web') {
 		maven { url "http://clojars.org/repo" }
 	}
 
-	// apply plugin: "net.ltgt.apt"
-
 	dependencies {
-		// https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
 		compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 		// spring cache
 		compile("org.springframework:spring-context-support")
@@ -81,7 +78,6 @@ project(':server_web') {
 		}
 	}
 	def mainClassName = "ru.nlp_project.story_line2.server_web.ServerWebApplication"
-
 
 	bootRepackage {
 		// enable repackaging in uber/fat jar
@@ -233,16 +229,14 @@ project(':crawler') {
 	javaProject(it)
 	javaLogLibrary(it)
 	javaTestLibrary(it)
+	javaSpringBootProject(it)
 
 	// to find 'com.sleepycat:je'
 	repositories {
 		maven { url "http://download.oracle.com/maven" }
 	}
 
-	// before dependencies with annotation processing
-	apply plugin: "net.ltgt.apt"
 	dependencies {
-		// main
 		// BSON Jackson mapper
 		compile 'de.undercouch:bson4jackson:2.7.0'
 		// sheduler enging
@@ -253,32 +247,27 @@ project(':crawler') {
 		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		compile "commons-io:commons-io:${COMMONS_IO_VER}"
 		compile "ru.nlp_project.story_line2:crawler4j:4.4.0"
-	    //compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
-		compile "io.dropwizard:dropwizard-core:${DROPWIZARD_CORE_VER}"
+
+		// compile "org.springframework:spring-context-support"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
 		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+
 		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	    compile "org.jsoup:jsoup:${JSOUP_VER}"
 		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		// Dagger dependencies
-		compile "com.google.dagger:dagger:${DAGGER_VER}"
-		// Dagger dependencies
-		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
 	}
-	apply plugin: 'com.github.johnrengelman.shadow'
-
 	// Include dependent libraries in archive.
 	def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
 
-	shadowJar {
-		mergeServiceFiles()
-	  	manifest {
-			attributes 'Description': 'This is an application JAR'
-	    	attributes "Main-Class": "$mainClassName"
-	 	}
+	bootRepackage {
+		// enable repackaging in uber/fat jar
+	    enabled = true
 	}
-
-	build.dependsOn('shadowJar')
+	springBoot {
+		// remove small jar file with only project classes
+	    backupSource = false
+	}
 
 	apply plugin: 'maven-publish'
 	publishing {
@@ -287,7 +276,7 @@ project(':crawler') {
 				groupId 'ru.nlp_project.story_line2'
             	artifactId artifactId
 				version it.version
-	            from components.shadow
+	            from components.java
 	        }
 	    }
 		repositories {

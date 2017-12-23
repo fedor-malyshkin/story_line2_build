@@ -4,7 +4,7 @@
 
 ## Библиотки
 Одним из способов отправки данных является line-протокол (с библиотекой `com.github.davidb:metrics-influxdb` для `io.dropwizard.metrics:metrics-core`)
-Другим способом отправки данныйх в InfluxDB является Logstash[https://www.elastic.co/guide/en/logstash/] (с парсингом журналов)
+Другим способом отправки данныйх в InfluxDB является [Logstash](https://www.elastic.co/guide/en/logstash/) (с парсингом журналов)
 
 ## Структура записей в БД InfluxDB
 Структура записи для InfluxDB:
@@ -12,4 +12,4 @@
 Название поля: любое, отражающее хранящиеся данные;
 Значение: числовое (ествественно :)).
 
-Нпример: наименовени - "processed_links", тэги - [host=datahouse01.nlp-project.ru]/[service=crawler]/[source=bnkomi_ru]/[port=9090], значение = 235.
+Нпример: наименовени - "processed_links", тэги - [scope=in_app]/[host=datahouse01.nlp-project.ru]/[service=crawler]/[source=bnkomi_ru]/[port=9090], значение = 235.
