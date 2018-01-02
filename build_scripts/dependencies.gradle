@@ -145,6 +145,8 @@ project(':server_storm') {
 		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
 		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
 		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
+		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 		// Dagger dependencies
 		compile "com.google.dagger:dagger:${DAGGER_VER}"
 		// Dagger dependencies
