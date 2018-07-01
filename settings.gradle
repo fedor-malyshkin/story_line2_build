@@ -1,1 +1,1 @@
-include 'config', 'morph', 'token', 'glr_parser', 'glr_parser_debugger', 'glr_parser_testing', 'geo', 'client-android', 'crawler', 'crawler_scripts', 'server_web', 'server_storm'
+include 'config', 'morph', 'token', 'glr_parser', 'glr_parser_debugger', 'glr_parser_testing', 'crawler',  'analyser', 'geo', 'crawler_scripts', 'server_web', 'server_storm', 'client-android'
