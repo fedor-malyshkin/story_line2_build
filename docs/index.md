@@ -1,4 +1,1 @@
----
-layout: default
----
 Base text
