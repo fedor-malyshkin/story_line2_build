@@ -1,0 +1,4 @@
+---
+layout: default
+---
+Base text
