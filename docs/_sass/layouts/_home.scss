@@ -1,0 +1,95 @@
+.home {
+    a {
+        color: $brand-color;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    >section {
+        padding-top: $home-section-padding;
+        padding-bottom: $home-section-padding;
+        color: $text-color;
+        &:nth-child(2n) {
+            background-color: $zebra-color;
+        }
+        h1,
+        h2,
+        p {
+            margin-top: $home-text-margin;
+            margin-bottom: $home-text-margin;
+        }
+        h1,
+        h2 {
+            text-align: center;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1.875rem;
+        }
+        li,
+        p {
+            text-align: left;
+            font-size: 1.5rem;
+        }
+        p {
+            text-indent: 2em;
+        }
+        ul {
+			// идём по тому-же уровню, что и остальные
+            padding-left: 4em;
+        }
+    }
+    >.landing {
+        color: #FFFFFF;
+        padding-top: $home-landing-padding;
+        padding-bottom: $home-landing-padding;
+        text-align: right;
+        background: url($baseurl + "/assets/img/intro-bg.jpg") no-repeat center center;
+        h1,
+        h2,
+        p {
+            text-align: right;
+        }
+    }
+    .contacts {
+        text-align: left;
+        ul {
+            padding: 0;
+			padding-left: 2em;
+        }
+        li {
+            font-size: 1.5rem;
+            list-style-type: none;
+        }
+    }
+}
+
+@include media-query-max($on-mobile) {
+    .home {
+        >section {
+            padding-left: $base-mobile-padding;
+            padding-right: $base-mobile-padding;
+            padding-top: $home-section-padding - 20;
+            padding-bottom: $home-section-padding - 20;
+        }
+    }
+}
+
+@media screen and (min-width: $on-mobile + 1) and (max-width: $on-desktop - 1) {
+    .home {
+        >section {
+            padding-left: $base-tablet-padding;
+            padding-right: $base-tablet-padding;
+        }
+    }
+}
+
+@include media-query-min($on-desktop) {
+    .home {
+        >section {
+            padding-left: $base-desktop-padding;
+            padding-right: $base-desktop-padding;
+        }
+    }
+}

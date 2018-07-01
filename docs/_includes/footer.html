@@ -1,34 +1,53 @@
 <footer class="footer" role="contentinfo" aria-label="Site footer">
-<!-- yandex metrik -->
-{% if site.github.environment == "dotcom" %}
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-    (function (d, w, c) {
-        (w[c] = w[c] || []).push(function() {
-            try {
-                w.yaCounter49434595 = new Ya.Metrika2({
-                    id:49434595,
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true,
-                    webvisor:true
-                });
-            } catch(e) { }
-        });
+    <div class="socials" role="navigation" aria-label="Social links">
+        <ul role="menu" aria-hidden="true" aria-label="Social link">
+            <li role="listitem" aria-label="Social link item"><a href="{{ site.github_link }}" target="_blank" role="link" aria-label="GitHub" title="GitHub's Profile"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="{{ site.linkedin_link }}" target="_blank" role="link" aria-label="Linkedin" title="LinkedIn's Profile"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="{{ site.habrahabr_link }}" target="_blank" role="link" aria-label="HabraHabr" title="HabraHabr's Profile"><i class="fa fa-header" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="{{ site.moikrug_link }}" target="_blank" role="link" aria-label="Moikrug" title="MoiKrug's Profile"><i class="fa fa-link" aria-hidden="true"></i></a></li>
+            <li role="listitem" aria-label="Social link item"><a href="{{ '/feed.xml' | relative_url }}" role="link" aria-label="RSS"><i class="fa fa-rss-square" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+    <div class="copyright" role="contentinfo">
+        <p></p>
+        <div class="right">
+            <a href="{{ '/sitemap.xml' | relative_url }}" target="_blank" role="link" aria-label="Site map">Site Map</a>
+        </div>
+    </div>
+    <!-- yandex metrik -->
+    {% if site.github.environment == "dotcom" %}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter49434595 = new Ya.Metrika2({
+                        id: 49434595,
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true,
+                        webvisor: true
+                    });
+                } catch (e) {}
+            });
 
-        var n = d.getElementsByTagName("script")[0],
-            s = d.createElement("script"),
-            f = function () { n.parentNode.insertBefore(s, n); };
-        s.type = "text/javascript";
-        s.async = true;
-        s.src = "https://mc.yandex.ru/metrika/tag.js";
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function() {
+                    n.parentNode.insertBefore(s, n);
+                };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/tag.js";
 
-        if (w.opera == "[object Opera]") {
-            d.addEventListener("DOMContentLoaded", f, false);
-        } else { f(); }
-    })(document, window, "yandex_metrika_callbacks2");
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/49434595" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-{% endif %}
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else {
+                f();
+            }
+        })(document, window, "yandex_metrika_callbacks2");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/49434595" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+    {% endif %}
 </footer>
