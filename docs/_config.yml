@@ -69,3 +69,5 @@ date_format: "%b %-d, %Y"
 # Site permalink settings
 permalink: /:title/
 # End
+
+theme: jekyll-theme-slate
