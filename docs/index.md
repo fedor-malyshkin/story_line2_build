@@ -18,7 +18,7 @@ It could give me a chance to use all technologies I wanted.
 
 From high-level point of view project could be drawn like this:
 
-![Project Inrastructure Schema]({{ "/assets/img/schema-intro.png" | absolute_url }})
+![Project Inrastructure Schema]({{ "/assets/img/schema-intro.png" | relative_url }})
 
 Project divided in many parts (one for each component and other things) - which are available in my repos with prefix "story_line2_".
 
