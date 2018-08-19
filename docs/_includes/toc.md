@@ -1,6 +1,6 @@
 **Table of content:**
 * [Home]({{ site.baseurl}}{% link index.md %})
-* [Prerequisites]({{ site.baseurl}}{% link prerequisites.md %})
+* [Prerequisites2]({{ site.baseurl}}{% link prerequisites.md %})
 * [Configuration]( {% link  configuration.md %})
 * [Provisioning]( {% link provisioning.md %})
 * Components
