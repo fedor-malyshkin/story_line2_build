@@ -3,10 +3,9 @@ title: "Components: Crawler"
 layout: post
 permlink: components/crawler
 ---
-**Description:** Анализатор (паук) веб-сайтов для сбора необходимой информации и передачи на сервер проекта.
+**Description:** News site spider (crawler)
 
-**Technologies:** Паук оформлен в виде микросервиса с одним конфигурационным файлом. Построен с
-использованием [Spring](http://spring.io) и сопутствующих библиотек инфраструктуры.
+**Technologies:** Implemented as microservice with one configuration file. Created with usage of [Spring](http://spring.io).
 
 **Git-repo:** [story_line2_crawler](https://github.com/fedor-malyshkin/story_line2_crawler)
 
@@ -14,17 +13,13 @@ permlink: components/crawler
 
 **Additional info:**
 
-### Получение данных
-С учтом того, что не все сайты публикуют rss/atom-ленты приходится информацию
-с некоторых получать посредством их прямого парсинга. для этого и используется
-crawler (edu.uci.ics:crawler4j), полученные страницы в дальнейшем анализируются
-groovy скриптами (проект  [crawler_scripts](https://github.com/fedor-malyshkin/story_line2_crawler_scripts)),
-которые не только определяют необходимость извлечения информации, но и извлекают дополнительную информацию (дату публикации, ссылку на картинку и т.д.)
+# Getting data
+Because not all news site publish their content trough rss/atom-feeds there is a necessarity to parse their web pages directly. For getting pages (and walking through site structure) used crawler (edu.uci.ics:crawler4j).
+After page was received it is analysed by groovy scripts (repo  [story_line2_crawler_scripts](https://github.com/fedor-malyshkin/story_line2_crawler_scripts)),
+which not only detect possibility to extract content but also extract additional info
+(publish date, link to picture and so on...)
 
-С сайтами которые публикуют rss/atom-ленты тоже не всё так просто: некоторые выкладывают полное содержание статьи в ленте, другие же размещают только заголовок - в данном случае приходится идти по ссылке и там так же повторять полный анализ с извлечением данных.
-
-### Конфигурационный файл
-Далее описана структура конфигурационного файла
+# Configuration file
 ```yaml
 ---
 # Количество потоков на сайт (лучше не более 4)
@@ -60,9 +55,8 @@ feed_sites:
    # Расписание в формате cron (http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
    cron_schedule: "0 0/5 * * * ?" # Fire every 5 minutes
 ```
-### Журналирование
-
-### Метрики
+# Metrics
+```
 influxdb_metrics:
    enabled: false
    influxdb_host: ""
@@ -71,16 +65,17 @@ influxdb_metrics:
    influxdb_user: ""
    influxdb_password: ""
    reporting_period: 30
+```   
 
-### Запись в БД
-Уникальность записи в БД определяется на основании пары - (domain:URL)
-Запись по умолчанию производится в базу данных mongodb "crawler" (коллекция "crawler_entries")
-Формат записи следующий:
+# Writing to Kafka
+Received info is serializes to JSON and is writtent to kafka broker (`crawler` topic)
+
+Format:
 ```json
 {
-    "_id" : ObjectId("587cbc11aca9f3482120b052"),
-    "publication_date" : ISODate("2017-01-13T16:06:00.000Z"), // datetime in UTC
-	"processing_date" : ISODate("2017-01-13T16:06:00.000Z"), // datetime in UTC
+    "_id" : "587cbc11aca9f3482120b052",
+    "publication_date" : "2017-01-13T16:06:00.000Z", // datetime in UTC
+	"processing_date" : "2017-01-13T16:06:00.000Z", // datetime in UTC
 	"content" : "Около ... фактическим исполнением.",
     "raw_content" : "<html>....",  // только в случае невозможности предварительного извлечения данных....
     "path" : "/data/news/58212/",
@@ -90,12 +85,9 @@ influxdb_metrics:
     "url" : "https://www.bnkomi.ru/data/news/58212/"
 }
 ```
-При этом в случае если контент сайта не был получен с использованием готовых feed-ов, поля "publication_date", "title", "image_url" и "content" могут отсуствовать и требуется дополнительный анализ и извлечение информации (а поле "raw_content" -- присутствовать).
 
-
-# Интерпретация и структура скриптов для анализа.
-Основной класс для анализа и исполнения скриптов: "ru.nlp_project.story_line2.crawler.impl.GroovyInterpreterImpl", который ожидает найти скрипты в каталоге из переменной "crawler_script_dir".
-
+# Data from feeds
+If content was not received from rss/atom-feed all raw_content is wrtten in "raw_content". In this case fileds "publication_date", "title", "image_url" и "content" can absent in resulting JSON.
 
 ---
 {% include toc.md %}

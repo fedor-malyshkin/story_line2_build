@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: "'Stort Line 2' Site"
+title: "'Story Line 2' Project's Site"
 url: "https://fedor-malyshkin.github.io/story_line2_build/" # the base hostname & protocol for your site, e.g. http://example.com
 social:
   name: Fedor Malyshkin

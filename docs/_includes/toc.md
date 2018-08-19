@@ -1,10 +1,8 @@
 **Table of content:**
 * [Home](/)
 * [Prerequisites](/prerequisites)
-* [Build Tool](/build-tool)
 * [Configuration](/configuration)
 * [Provisioning](/provisioning)
-* [Build Tool](/build-tool)
 * Components
 	* [Crawler (Spring Boot, Java)](/components/crawler)
 	* [Message Broker (Kafka)](/components/kafka)
@@ -15,9 +13,15 @@
 	* [REST server (Lagom, Scala)](/components/rest)
 	* [Service coordination (Zookeeper)](/components/zookeeper)
 	* [Time-series database (monitoring data) (InfluxDB)](/components/influxdb)
+	* [Metrics collector (Telegraf)](/components/telegraf)
 	* [Time-series visualization service (Grafana)](/components/grafana)
-	* [reverse proxy/load-balancer (nginx)](/components/nginx)
-* [Monitoring Links](/monitoring-links)
-* [Tools web-interface's Links](/links)
+	* [Reverse proxy/load-balancer (nginx)](/components/nginx)
+* [Monitoring Links](/monitoring_links)
 * Development
-	* Misc
+	* [Build Tool](/build-tool)
+	* [Provisioning (DevOps specific)](/provisioning_devops)
+	* [Continuous Integration, Continuous Deployment](ci_cd)
+	* [Implementation design](/implementation_design)
+	* [Logging](/logging)
+	* [Metrics](/metrics)
+	* [Adding new server](/new_server)

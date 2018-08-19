@@ -1,14 +1,22 @@
-# Журналирование
-## Библиотека журналирования
-Основной библиотекой журналирования является [SLF4J](https://www.slf4j.org).
+---
+title: Logging
+layout: post
+permlink: logging
+---
+
+# Library
+Main library for java products is [SLF4J](https://www.slf4j.org).
+
+Use in gradle like this
 ```
 compile 'org.slf4j:slf4j-api:1.7.XXX'
 compile 'ch.qos.logback:logback-classic:1.1.X'
 ```
 
-## Основные требования к журналированию
-* Детализированный вывод только в режиме TRACE (при этом необходимо проверять "isTraceEnabled")
-* Информация о старте и остановке сервиса уровень - INFO
-* В продуктиве - большинство уровней INFO (не допускается DEBUG на постоянной основе)
+# Main rules in logging
+* Detailed output only in TRACE level (could be checked by "isTraceEnabled")
+* Startup and shutdown - INFO
+* On production INFO level for all components
 
-## Указание параметров журналирования
+---
+{% include toc.md %}

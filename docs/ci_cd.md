@@ -1,18 +1,21 @@
-# Continuous Integration + Continuous Deployment
-## Continuous Integration
-В качестве сервер CI используется [Jenknins](http://jenkins.io/)
+---
+title: "Continuous Integration, Continuous Deployment"
+layout: post
+permlink: ci_cd
+---
 
-**Конфигурирование**: работы в каждом проекте создаётся "Jenkninsfile" с описание
-процесса извлечения тестирования и сборки результатов
+# Continuous Integration
+As CI server I choose [Jenknins](http://jenkins.io/)
 
-**Доступ к репозитарию**: для получения доступа используются Deployment keys,
-создаваемые для учётной записью под котторой работает сервер CI, при этом
-соотвествующие записи делаются в `~/.ssh/config`. Т.е. нарпример, репозитарий
-"story_line2_build" выглядит как "story_line2_build.github.com" и с
-ключём "id_rsa.story_line2_build" -- это соотвественно находит своё отражение в
-путях для git - "story_line2_crawler.github.com:fedor-malyshkin/story_line2_crawler.git"
+**CI pipeline configuration**: in each submodule
+ [`Jenkninsfile`](https://jenkins.io/doc/book/pipeline/jenkinsfile/) is created,
+which describes process of extraction and testing this submodule
 
-Полезный скрипт для ключей:
+**Access to repo**: for access to repo Deployment keys are used. Each key is named by schema:
+`story_line2_build` -> `story_line2_build.github.com` with key `id_rsa.story_line2_build`.
+Path to repo looks like: `story_line2_crawler.github.com:fedor-malyshkin/story_line2_crawler.git`
+
+Useful script for keys:
 ```sh
 for var in story_line2_crawler story_line2_build story_line2_deployment \
  story_line2_client-android story_line2_server_web story_line2_server_storm story_line2_morph \
@@ -23,4 +26,30 @@ do
 done
 ```
 
-## Continuous Deployment
+# Server CI configuration
+To work correctly and get necessary code from github several steps must be done:
+2. `apt-get update && apt-get -y install git`
+2. generate key `ssh-keygen -t rsa -b 4096 -C "your_github_email_account@example.com"`
+2. Import public park of the key into guthub (in REPO Repository->Settings->Deploy Keys, don't forget give a meaningful name)
+2. add into /home/deploy-user-name/.ssh/config:
+```
+Host REPO_NAME.github.com
+	Hostname github.com
+	user git
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_rsa.<reponame>
+```
+2. `chmod 600 ~/.ssh/config` !!!
+2. `git clone REPO_NAME.github.com:fedor-malyshkin/story_line2_deployment.git .`
+2. Add  `ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts`)
+2. Check: `ssh -T REPO_NAME.github.com`
+2. Read [link 1](https://help.github.com/articles/connecting-to-github-with-ssh/)
+2. Read [link 2](https://developer.github.com/guides/managing-deploy-keys/#managing-deploy-keys)
+
+# Continuous Deployment. Production server configuration
+On production server cron-running task makes:
+ 2. checks SHA1 remote repo `story_line2_deployment` with tag `latest` with current stored value - case of difference it calls `git pull` (and get new version of scripts, configs and so on...). After that it calls `puppet apply` (trough batch file "provision_production.sh").
+
+
+ ---
+ {% include toc.md %}
