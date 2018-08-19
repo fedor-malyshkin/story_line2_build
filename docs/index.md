@@ -3,12 +3,11 @@ title: History and high-level project description
 layout: post
 ---
 
-When I thought about how to try in practice all technologies I studied last years - I just decided to create project which could include all my interests:
+When I thought about how to try use in practice all technologies I studied last years - I just decided to create project which could include all my interests:
 
 * a lot of data,
 * distributed/cluster programming,
 * ML,
-* mobile device programming,
 * reactive/functional programming,
 * network/REST programming,
 * DevOps and so on....
@@ -16,16 +15,14 @@ When I thought about how to try in practice all technologies I studied last year
 The idea of implementing a news aggregator (with a client on Android) and its server side for data collection, processing, storage and presentation was chosen.
 It could give me a chance to use all technologies I wanted.
 
-From high-level point of view project could be drawn like this:
+From high-level point of view the project could be drawn like this:
 
-![Project Inrastructure Schema]({{ "/assets/img/schema-intro.png" | relative_url }})
+![Project Infrastructure Schema]({{ "/assets/img/schema-intro.png" | relative_url }})
 
-Project divided in many parts (one for each component and other things) - which are available in my repos with prefix "story_line2_".
+Project divided in many parts (one for each component and other things) - which are available in [my repos](https://github.com/fedor-malyshkin/) with prefix "story_line2_".
 
-*TOC:*
+_Content isn't filled yet, But you can look at project description
+here  [habr.com](https://habr.com/post/334510/)  (but only in Russian)_
 
-* [next subsections TBD]()
-
-
-Content isn't filled yet
-But you can look at project description here [https://habr.com/post/334510/](https://habr.com/post/334510/)  (but only in Russian)
+---
+{% include toc.md %}
