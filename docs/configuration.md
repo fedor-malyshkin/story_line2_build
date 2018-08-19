@@ -11,7 +11,7 @@ In case of [Spring](https://spring.io/) usage - its own ways for configuration f
 
 
 # Configuration of 3rd party project's components
-Configuration process is described in [Provisioning (DevOps specific)]({% link provisioning_devops.md %}) and [Provisioning]({% link provisioning.md %}).
+Configuration process is described in [Provisioning (DevOps specific)]({{ site.baseurl}}{% link provisioning_devops.md %}) and [Provisioning]({{ site.baseurl}}{% link provisioning.md %}).
 
 ---
 {% include toc.md %}

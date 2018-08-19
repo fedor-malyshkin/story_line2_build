@@ -23,7 +23,7 @@ When I thought about code/script organization it was important to make provision
 - "production" - production-specific script, Puppet's Hiera databse and puppet's `sites.pp`
 - "test" - test-specific script, Puppet's Hiera databse and puppet's `sites.pp`
 - "development" - development-specific script, Puppet's Hiera databse and puppet's `sites.pp`
-- "teststand" - специфичные скрипты для тестового стенда, БД Hiera и `sites.pp`
+- "teststand" - test-specific script, Puppet's Hiera databse and puppet's `sites.pp`
 - provision_development.sh - provision-batch file
 - provision_production.sh - provision-batch file
 - provision_test.sh - provision_production.sh
@@ -40,7 +40,7 @@ All versions should be specified in puppet's config (on stand or production envi
 	* production - main production stand
 - stand initialization is done with help of gradle tasks (from [store_line2_build](https://github.com/fedor-malyshkin/story_line2_build) repo "build_scripts/build-tasks.gradle")
 - __!!!names of containers should be the same as names of projects/submodules__
-- all services are running under control and monitoring [monit](https://mmonit.com) - it gives nice UI to see service status (see at [Monitoring Links]({%link monitoring_links.md %}))
+- all services are running under control and monitoring [monit](https://mmonit.com) - it gives nice UI to see service status (see at [Monitoring Links]({{ site.baseurl}}{%link monitoring_links.md %}))
 
 ## About "test"/"development"
 - stand preparation is done with help of `gradle prepareStand` (creates necessary files but doesn't run anything)

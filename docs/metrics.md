@@ -5,7 +5,7 @@ permalink: metrics
 ---
 
 # Sources / Visualization
-At the moment all metric are collected in InfluxDB with Grafana as main visualization tool. See in [Monitoring Links]({% link monitoring_links.md  %})
+At the moment all metric are collected in InfluxDB with Grafana as main visualization tool. See in [Monitoring Links]({{ site.baseurl}}{% link monitoring_links.md  %})
 
 # Libraries
 Main library for metric collection in java projects is `io.dropwizard.metrics:metrics-core` (with help of `com.github.davidb:metrics-influxdb`)
