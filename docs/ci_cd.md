@@ -1,7 +1,7 @@
 ---
 title: "Continuous Integration, Continuous Deployment"
 layout: post
-permlink: ci_cd
+permalink: ci_cd
 ---
 
 # Continuous Integration

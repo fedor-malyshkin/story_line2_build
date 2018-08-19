@@ -1,7 +1,7 @@
 ---
 title: "Build tool"
 layout: post
-permlink: build-tool
+permalink: build-tool
 ---
 
 # Building and dependency management

@@ -1,7 +1,7 @@
 ---
 title: "Components: Crawler"
 layout: post
-permlink: components/crawler
+permalink: components/crawler
 ---
 **Description:** News site spider (crawler)
 
@@ -20,7 +20,7 @@ which not only detect possibility to extract content but also extract additional
 (publish date, link to picture and so on...)
 
 # Configuration file
-```yaml
+```
 ---
 # Количество потоков на сайт (лучше не более 4)
 crawler_per_site: 1
@@ -55,6 +55,7 @@ feed_sites:
    # Расписание в формате cron (http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html)
    cron_schedule: "0 0/5 * * * ?" # Fire every 5 minutes
 ```
+
 # Metrics
 ```
 influxdb_metrics:
@@ -71,7 +72,8 @@ influxdb_metrics:
 Received info is serializes to JSON and is writtent to kafka broker (`crawler` topic)
 
 Format:
-```json
+
+```
 {
     "_id" : "587cbc11aca9f3482120b052",
     "publication_date" : "2017-01-13T16:06:00.000Z", // datetime in UTC

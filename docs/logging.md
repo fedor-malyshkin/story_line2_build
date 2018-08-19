@@ -1,7 +1,7 @@
 ---
 title: Logging
 layout: post
-permlink: logging
+permalink: logging
 ---
 
 # Library

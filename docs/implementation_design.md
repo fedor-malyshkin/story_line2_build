@@ -1,7 +1,7 @@
 ---
 title: Implementation Design (Under construction)
 layout: post
-permlink: implementation_design
+permalink: implementation_design
 ---
 
 

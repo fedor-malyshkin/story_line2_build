@@ -1,7 +1,7 @@
 ---
 title: Monitoring Links
 layout: post
-permlink: monitoring_links
+permalink: monitoring_links
 ---
 Many links are open (but some not - because of their control functions):
 

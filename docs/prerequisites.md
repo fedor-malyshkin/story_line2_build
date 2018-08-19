@@ -1,7 +1,7 @@
 ---
 title: Project prerequisites
 layout: post
-permlink: prerequisites
+permalink: prerequisites
 ---
 
 If you want to compile and run this project on your own machine/server you need to install such software:

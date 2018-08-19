@@ -1,7 +1,7 @@
 ---
 title: "Adding new server"
 layout: post
-permlink: new_server
+permalink: new_server
 ---
 
 ---

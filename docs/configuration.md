@@ -1,7 +1,7 @@
 ---
 title: Configuration
 layout: post
-permlink: configuration
+permalink: configuration
 ---
 
 # Configuration of custom code
@@ -11,7 +11,7 @@ In case of [Spring](https://spring.io/) usage - its own ways for configuration f
 
 
 # Configuration of 3rd party project's components
-Configuration process is described in [Provisioning (DevOps specific)](/provisioning_devops) and [Provisioning](/provisioning).
+Configuration process is described in [Provisioning (DevOps specific)]({% link provisioning_devops.md %}) and [Provisioning]({% link provisioning.md %}).
 
 ---
 {% include toc.md %}
