@@ -24,4 +24,5 @@
 	* [Implementation design]({{ site.baseurl}}{% link implementation_design.md %})
 	* [Logging]({{ site.baseurl}}{% link logging.md %})
 	* [Metrics]({{ site.baseurl}}{% link metrics.md %})
+	* [Used ports]({{ site.baseurl}}{% link ports.md %})
 	* [Adding new server]({{ site.baseurl}}{% link new_server.md %})

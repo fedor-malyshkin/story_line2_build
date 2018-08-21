@@ -54,9 +54,9 @@ def getCurrentProjectBuild(projectName, machineObj) {
 
 ext {
 	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_storm', 'server_web']
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web']
 	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['crawler', 'server_storm', 'server_web']
+	docker_machines_w_artifacts = ['crawler', 'server_web']
 }
 
 // create stand directories

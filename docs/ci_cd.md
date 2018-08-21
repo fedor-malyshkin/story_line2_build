@@ -30,7 +30,7 @@ done
 To work correctly and get necessary code from github several steps must be done:
 2. `apt-get update && apt-get -y install git`
 2. generate key `ssh-keygen -t rsa -b 4096 -C "your_github_email_account@example.com"`
-2. Import public park of the key into guthub (in REPO Repository->Settings->Deploy Keys, don't forget give a meaningful name)
+2. Import public part of the key into guthub (in REPO Repository->Settings->Deploy Keys, don't forget give a meaningful name)
 2. add into /home/deploy-user-name/.ssh/config:
 ```
 Host REPO_NAME.github.com
@@ -51,5 +51,5 @@ On production server cron-running task makes:
  2. checks SHA1 remote repo `story_line2_deployment` with tag `latest` with current stored value - case of difference it calls `git pull` (and get new version of scripts, configs and so on...). After that it calls `puppet apply` (trough batch file "provision_production.sh").
 
 
- ---
+---
  {% include toc.md %}
