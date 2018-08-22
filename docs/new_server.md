@@ -25,11 +25,12 @@ Host github.com
 ```
 2. [Deploy key] `chmod 600 ~/.ssh/config` !!!
 1. [Deploy key] `chmod 700 ~/.ssh`
-1. checkout `story_line2_deployment` dir by: `git clone github.com:fedor-malyshkin/story_line2_deployment.git provision`
+1. checkout `story_line2_deployment` (better in `/root` dir) dir by: `git clone github.com:fedor-malyshkin/story_line2_deployment.git provision`
 1. change domain name:
 	1. Add "hostname.nlp-project.ru" to `/etc/hostname`
 	1. Add "11.22.33.44 hostname hostname.nlp-project.ru" to `/etc/hosts`
 1. Set timezone: `sudo timedatectl set-timezone Europe/Moscow`
+1. Make necessary configuration in provision settings according to new server
 1. __Reboot__
 1. Run `provision_production.sh`
 1. [Access key] add public keys to to `/home/srv_oper/.ssh/authorized_keys` on REMOTE MACHINE
