@@ -33,6 +33,7 @@ Host github.com
 1. Make necessary configuration in provision settings according to new server
 1. __Reboot__
 1. Run `provision_production.sh`
+1. [Access key] `sudo -u srv_oper bash` on REMOTE MACHINE
 1. [Access key] add public keys to to `/home/srv_oper/.ssh/authorized_keys` on REMOTE MACHINE
 1. [Access key] Add entries to local SSH config (`/home/XXXX/.ssh/config`):
 ```
@@ -42,7 +43,6 @@ Host YYYYY
 	IdentitiesOnly yes
 	IdentityFile ~/.ssh/rsa.YYYYYY
 ```
-
 
 ---
 {% include toc.md %}
