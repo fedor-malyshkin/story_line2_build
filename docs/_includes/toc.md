@@ -1,7 +1,7 @@
 **Table of content:**
 * [Home]({{ site.baseurl}}{% link index.md %})
 * [Prerequisites]({{ site.baseurl}}{% link prerequisites.md %})
-* [Developement stand srovisioning]({{ site.baseurl}}{% link provisioning.md %})
+* [Developement stand provisioning]({{ site.baseurl}}{% link provisioning.md %})
 * Components
 	* [Crawler (Spring Boot, Java)]({{ site.baseurl}}{% link components/crawler.md %})
 	* [Message Broker (Kafka)]({{ site.baseurl}}{% link components/kafka.md %})
