@@ -6,7 +6,7 @@ permalink: monitoring_links
 Many links are open (but some not - because of their control functions):
 
 * [Jenkins](http://ci.nlp-project.ru:8080) (user: "view", password: "view")
-* [Grafana](http://ci.nlp-project.ru:8081) (user: "view", password: "view") _(now moving to telegraf metrics collector - a lot of invalid dashboards)_
+* [Grafana](http://ci.nlp-project.ru:8081/d/BUBJ8Ltik/servers-overview)  _(now moving to telegraf metrics collector - so there are some  invalid dashboards)_
 * [monit (ci.nlp-project.ru)](http://ci.nlp-project.ru:3000)
 * [monit (datahouse01.nlp-project.ru)](http://datahouse01.nlp-project.ru:3000)
 * [monit (datahouse02.nlp-project.ru)](http://datahouse02.nlp-project.ru:3000)
