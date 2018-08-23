@@ -37,7 +37,9 @@ def loadArtifactVersions(type) {
 
 // получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
 def getCurrentProjectBuild(projectName, machineObj) {
+	println "Getting artifact version for ${projectName}"
 	if (machineObj['version'] == "presented") {
+		println "Getting artifact from ${projectName}"
 		// try first "*all.jar" (fatJar)
 		File libsDir =  project(":${projectName}").libsDir
 		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
@@ -54,7 +56,7 @@ def getCurrentProjectBuild(projectName, machineObj) {
 
 ext {
 	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web']
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web', 'spark', 'kafka']
 	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
 	docker_machines_w_artifacts = ['crawler', 'server_web']
 }
@@ -90,7 +92,6 @@ docker_machines.each { machine ->
 	task "copyProvisionScripts_${machine}" (type: Copy, dependsOn: ['createStandDir']){
 		description "выполнить копирование provision-скриптов"
 		from "${projectDir}/deployment"
-		exclude("${projectDir}/deployment/docker_templates")
 		exclude("docker_templates")
 		into project.ext.stand.deploy_dir + "/${machine}"
 	}
@@ -102,6 +103,8 @@ task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	from "${projectDir}/deployment/docker_templates"
 	into project.ext.stand.deploy_dir
 	expand(project.ext.stand)
+//	exclude(docker_machines) // сами машины повторно не копируем
+	exclude('systemctl.py') // systemd replacement
 	filteringCharset = 'UTF-8'
 }
 

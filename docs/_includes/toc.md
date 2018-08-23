@@ -1,8 +1,7 @@
 **Table of content:**
 * [Home]({{ site.baseurl}}{% link index.md %})
 * [Prerequisites]({{ site.baseurl}}{% link prerequisites.md %})
-* [Configuration]({{ site.baseurl}}{% link  configuration.md %})
-* [Provisioning]({{ site.baseurl}}{% link provisioning.md %})
+* [Developement stand srovisioning]({{ site.baseurl}}{% link provisioning.md %})
 * Components
 	* [Crawler (Spring Boot, Java)]({{ site.baseurl}}{% link components/crawler.md %})
 	* [Message Broker (Kafka)]({{ site.baseurl}}{% link components/kafka.md %})
@@ -20,6 +19,7 @@
 * Development
 	* [Build Tool]({{ site.baseurl}}{% link build-tool.md %})
 	* [Provisioning (DevOps specific)]({{ site.baseurl}}{% link provisioning_devops.md %})
+	* [Configuration]({{ site.baseurl}}{% link  configuration.md %})
 	* [Continuous Integration, Continuous Deployment]({{ site.baseurl}}{% link ci_cd.md %})
 	* [Implementation design]({{ site.baseurl}}{% link implementation_design.md %})
 	* [Logging]({{ site.baseurl}}{% link logging.md %})
