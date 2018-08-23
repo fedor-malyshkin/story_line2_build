@@ -12,6 +12,14 @@ buildscript {
 	}
 }
 
+ext {
+	// образы, создаваемые docker'ом
+	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web',
+	'spark', 'kafka']
+	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
+	docker_machines_w_artifacts = ['crawler', 'server_web']
+}
+
 /*
 In form:
 ---
@@ -54,12 +62,6 @@ def getCurrentProjectBuild(projectName, machineObj) {
 
 }
 
-ext {
-	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web', 'spark', 'kafka']
-	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['crawler', 'server_web']
-}
 
 // create stand directories
 task createStandDir {
@@ -103,7 +105,6 @@ task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
 	from "${projectDir}/deployment/docker_templates"
 	into project.ext.stand.deploy_dir
 	expand(project.ext.stand)
-//	exclude(docker_machines) // сами машины повторно не копируем
 	exclude('systemctl.py') // systemd replacement
 	filteringCharset = 'UTF-8'
 }
