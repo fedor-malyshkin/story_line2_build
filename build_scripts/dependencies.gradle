@@ -213,8 +213,25 @@ project(':server_storm') {
 	} // publishing
 }
 
-
 project(':analyser') {
+	scalaProject(it)
+	// javaLogLibrary(it)
+	scalaTestLibrary(it)
+
+	dependencies {
+		testCompile "org.apache.spark:spark-mllib-local_${SCALA_VER}:${SPARK_VER}"
+		compile "org.apache.spark:spark-core_${SCALA_VER}:${SPARK_VER}"
+		compile "org.apache.spark:spark-sql_${SCALA_VER}:${SPARK_VER}"
+		// https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector
+		compile  "org.mongodb.spark:mongo-spark-connector_${SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
+
+	    // compile "org.jsoup:jsoup:${JSOUP_VER}"
+        // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+        // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
+    }
+}
+
+project(':server_akka') {
 	scalaProject(it)
 	// javaLogLibrary(it)
 	scalaTestLibrary(it)

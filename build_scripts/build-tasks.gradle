@@ -15,7 +15,7 @@ buildscript {
 ext {
 	// образы, создаваемые docker'ом
 	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web',
-	'spark', 'kafka']
+	'spark', 'kafka', 'hadoop']
 	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
 	docker_machines_w_artifacts = ['crawler', 'server_web']
 }
