@@ -21,6 +21,11 @@ From high-level point of view the project could be drawn like this:
 
 Project divided in many parts (one for each component and other things) - which are available in [my repos](https://github.com/fedor-malyshkin/) with prefix "story_line2_".
 
+Project is working 24/7 - you can monitor its status in [Monitoring Links]({{ site.baseurl}}{% link monitoring_links.md %}) (specially in Grafana, Spark UI, HDFS UI, YARN UI and Zeppelin/Jupither).
+
+If you have found any typo or have any questions - feel free to contact with me (contacts in footer).
+
+
 _Content isn't filled yet, But you can look at project description
 here  [habr.com](https://habr.com/post/334510/)  (but only in Russian)_
 
