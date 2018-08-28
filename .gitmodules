@@ -41,3 +41,6 @@
 [submodule "crawler_scripts"]
 	path = crawler_scripts
 	url = https://github.com/fedor-malyshkin/story_line2_crawler_scripts.git
+[submodule "server_akka"]
+	path = server_akka
+	url = https://github.com/fedor-malyshkin/story_line2_server_akka.git
