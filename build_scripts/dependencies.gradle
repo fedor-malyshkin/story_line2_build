@@ -18,12 +18,17 @@ DAGGER_VER='2.8'
 CRAWLER4J_VER='4.2'
 GROOVY_VER='2.4.12'
 SPRING_BOOT_STARTER_VER='1.5.9.RELEASE'
-// scala
-SCALA_VER = '2.11'
-SCALA_LIBRARY_VER = '2.11.12'
-SCALA_TEST_VER = '3.0.4'
+// akkk
+AKKA_VER= '2.5.15'
+AKKA_SCALA_VER = '2.12'
+AKKA_SCALA_LIBRARY_VER = '2.12.6'
+AKKA_SCALA_TEST_VER = '3.0.5'
 // spark
-SPARK_VER = '2.2.1'
+SPARK_VER = '2.3.1'
+SPARK_SCALA_VER = '2.11'
+SPARK_SCALA_LIBRARY_VER = '2.11.12'
+SPARK_SCALA_TEST_VER = '3.0.5'
+
 // my
 STORY_LINE2_GLR_PARSER_VER='0.6'
 STORY_LINE2_CONFIG_VER='0.2'
@@ -214,16 +219,16 @@ project(':server_storm') {
 }
 
 project(':analyser') {
-	scalaProject(it)
+	scalaProject(it, SPARK_SCALA_LIBRARY_VER)
 	// javaLogLibrary(it)
-	scalaTestLibrary(it)
+	scalaTestLibrary(it, SPARK_SCALA_VER, SPARK_SCALA_TEST_VER)
 
 	dependencies {
-		testCompile "org.apache.spark:spark-mllib-local_${SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-core_${SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-sql_${SCALA_VER}:${SPARK_VER}"
+		testCompile "org.apache.spark:spark-mllib-local_${SPARK_SCALA_VER}:${SPARK_VER}"
+		compile "org.apache.spark:spark-core_${SPARK_SCALA_VER}:${SPARK_VER}"
+		compile "org.apache.spark:spark-sql_${SPARK_SCALA_VER}:${SPARK_VER}"
 		// https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector
-		compile  "org.mongodb.spark:mongo-spark-connector_${SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
+		compile  "org.mongodb.spark:mongo-spark-connector_${SPARK_SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
 
 	    // compile "org.jsoup:jsoup:${JSOUP_VER}"
         // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
@@ -232,20 +237,13 @@ project(':analyser') {
 }
 
 project(':server_akka') {
-	scalaProject(it)
+	scalaProject(it, AKKA_SCALA_LIBRARY_VER)
 	// javaLogLibrary(it)
-	scalaTestLibrary(it)
+	scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
 
 	dependencies {
-		testCompile "org.apache.spark:spark-mllib-local_${SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-core_${SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-sql_${SCALA_VER}:${SPARK_VER}"
-		// https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector
-		compile  "org.mongodb.spark:mongo-spark-connector_${SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
-
-	    // compile "org.jsoup:jsoup:${JSOUP_VER}"
-        // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
-        // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
+		compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
+		testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     }
 }
 
@@ -416,7 +414,7 @@ project(':token') {
 	}
 }
 
-def scalaProject(project) {
+def scalaProject(project, scalaLibVer) {
 	project.ext.isScalaProject = true
 	project.apply plugin: 'scala'
 
@@ -443,7 +441,7 @@ def scalaProject(project) {
     }
 
 	project.dependencies {
-		compile "org.scala-lang:scala-library:${SCALA_LIBRARY_VER}"
+		compile "org.scala-lang:scala-library:${scalaLibVer}"
 	}
 }
 
@@ -497,9 +495,9 @@ def javaTestLibrary(project) {
     }
 }
 
-def scalaTestLibrary(project) {
+def scalaTestLibrary(project, scalaVer, scalaTestVer) {
     project.dependencies {
-		testCompile "org.scalatest:scalatest_${SCALA_VER}:${SCALA_TEST_VER}"
+		testCompile "org.scalatest:scalatest_${scalaVer}:${scalaTestVer}"
 
 		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
