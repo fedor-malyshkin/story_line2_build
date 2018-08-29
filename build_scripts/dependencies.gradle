@@ -2,22 +2,23 @@
 ext {
 VELOCITY_VER='1.7'
 JACKSON_VER='2.8.6'
-COMMONS_IO_VER='2.5'
-COMMONS_LANG_VER='3.5'
+COMMONS_IO_VER='2.6'
+COMMONS_LANG_VER='3.8'
 COMMONS_POOL_VER='2.4.2'
 DROPWIZARD_CORE_VER='1.1.0'
 DROPWIZARD_METRICS_VER='3.2.5'
 DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
-JSOUP_VER='1.10.3'
+JSOUP_VER='1.11.3'
 STORM_VER='1.1.1'
 JODATIME_VER='2.9.7'
 ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
 MONGO_JAVA_DRIVER_VER='3.4.2'
 MONGO_SPARK_CONNECTOR_VER='2.2.1'
-DAGGER_VER='2.8'
+DAGGER_VER='2.17'
 CRAWLER4J_VER='4.2'
-GROOVY_VER='2.4.12'
-SPRING_BOOT_STARTER_VER='1.5.9.RELEASE'
+GROOVY_VER='2.5.2'
+SPRING_BOOT_STARTER_VER='2.0.4.RELEASE'
+
 // akkk
 AKKA_VER= '2.5.15'
 AKKA_SCALA_VER = '2.12'
@@ -36,8 +37,8 @@ STORY_LINE2_MORPH_VER='0.4'
 STORY_LINE2_TOKEN_VER='0.1'
 // test
 TEST_JUNIT_VER='4.12'
-TEST_MOCKITO_VER='2.7.9'
-TEST_ASSERTJ_VER='3.6.2'
+TEST_MOCKITO_VER='2.21.0'
+TEST_ASSERTJ_VER='3.11.0'
 }
 
 project(':config') {
@@ -234,6 +235,14 @@ project(':analyser') {
         // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
         // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
     }
+
+    	
+	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+		main = 'org.scalatest.tools.Runner'
+		args = ['-R', 'build/classes/scala/test', '-o']
+	classpath = sourceSets.test.runtimeClasspath
+	}
+	test.dependsOn scalaTest
 }
 
 project(':server_akka') {
@@ -245,6 +254,14 @@ project(':server_akka') {
 		compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
 		testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     }
+	
+	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+		main = 'org.scalatest.tools.Runner'
+		args = ['-R', 'build/classes/scala/test', '-o']
+	classpath = sourceSets.test.runtimeClasspath
+	}
+	test.dependsOn scalaTest
+
 }
 
 project(':geo') {
@@ -504,7 +521,6 @@ def scalaTestLibrary(project, scalaVer, scalaTestVer) {
 		testCompile "junit:junit:${TEST_JUNIT_VER}"
 		testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
 		testCompile  "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
-
     }
 }
 
