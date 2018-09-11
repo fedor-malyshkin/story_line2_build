@@ -27,8 +27,11 @@ AKKA_SCALA_TEST_VER = '3.0.5'
 // spark
 SPARK_VER = '2.3.1'
 SPARK_SCALA_VER = '2.11'
+
+// test scala
 SPARK_SCALA_LIBRARY_VER = '2.11.12'
 SPARK_SCALA_TEST_VER = '3.0.5'
+PEGDOWN_SCALA_TEST_VER = '1.6.0'
 
 // my
 STORY_LINE2_GLR_PARSER_VER='0.6'
@@ -236,10 +239,10 @@ project(':analyser') {
         // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
     }
 
-    	
+
 	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
 		main = 'org.scalatest.tools.Runner'
-		args = ['-R', 'build/classes/scala/test', '-o']
+		args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
 	classpath = sourceSets.test.runtimeClasspath
 	}
 	test.dependsOn scalaTest
@@ -254,10 +257,11 @@ project(':server_akka') {
 		compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
 		testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     }
-	
+
 	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
 		main = 'org.scalatest.tools.Runner'
-		args = ['-R', 'build/classes/scala/test', '-o']
+		// http://www.scalatest.org/user_guide/using_the_runner
+		args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
 	classpath = sourceSets.test.runtimeClasspath
 	}
 	test.dependsOn scalaTest
@@ -515,6 +519,7 @@ def javaTestLibrary(project) {
 def scalaTestLibrary(project, scalaVer, scalaTestVer) {
     project.dependencies {
 		testCompile "org.scalatest:scalatest_${scalaVer}:${scalaTestVer}"
+		testCompile "org.pegdown:pegdown:${PEGDOWN_SCALA_TEST_VER}"
 
 		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
 		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
