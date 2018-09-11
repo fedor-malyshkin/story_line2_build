@@ -13,6 +13,7 @@ permalink: components/akka
 
 **Additional info:**
 
+[![Build Status](http://ci.nlp-project.ru:8080/buildStatus/icon?job=story_line2_server_akka)](http://ci.nlp-project.ru:8080/job/story_line2_server_akka/)
 
 ---
 {% include toc.md %}
