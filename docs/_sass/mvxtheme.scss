@@ -78,6 +78,7 @@ $documentation-margin: 40px !default;
 
 // Imports
 @import 'mixins/mixins';
+@import 'includes/highlighter';
 @import 'includes/header';
 @import 'includes/footer';
 @import 'includes/code';
