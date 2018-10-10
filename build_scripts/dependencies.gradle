@@ -45,10 +45,12 @@ ext {
   STORY_LINE2_CONFIG_VER = '0.2'
   STORY_LINE2_MORPH_VER = '0.4'
   STORY_LINE2_TOKEN_VER = '0.1'
+
 // test
   TEST_JUNIT_VER = '4.12'
   TEST_MOCKITO_VER = '2.21.0'
   TEST_ASSERTJ_VER = '3.11.0'
+  TEST_JSONASSERT_VER = '1.5.0'
 }
 
 project(':config') {
@@ -298,7 +300,7 @@ project(':crawler') {
     compile "commons-io:commons-io:${COMMONS_IO_VER}"
     compile "ru.nlp_project.story_line2:crawler4j:4.4.0"
     // kafka
-	compile "org.apache.kafka:kafka-clients:${KAFKA_VER}"
+    compile "org.apache.kafka:kafka-clients:${KAFKA_VER}"
 
     // metrics
     compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
@@ -309,11 +311,11 @@ project(':crawler') {
     compile "org.jsoup:jsoup:${JSOUP_VER}"
     compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
 
-	// functional tests
-	testCompile ("org.apache.zookeeper:zookeeper:${ZOOKEEPER_VER}") {
-		exclude module: 'slf4j-log4j12'
-	}
-	testCompile "org.apache.kafka:kafka_2.12:${KAFKA_VER}"
+    // functional tests
+    testCompile("org.apache.zookeeper:zookeeper:${ZOOKEEPER_VER}") {
+      exclude module: 'slf4j-log4j12'
+    }
+    testCompile "org.apache.kafka:kafka_2.12:${KAFKA_VER}"
   }
 
   // Include dependent libraries in archive.
@@ -521,6 +523,7 @@ def javaTestLibrary(project) {
     testCompile "junit:junit:${TEST_JUNIT_VER}"
     testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
     testCompile "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
+    testCompile "org.skyscreamer:jsonassert:${TEST_JSONASSERT_VER}"
   }
 }
 
