@@ -2,22 +2,22 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 
 buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		// reading YAML
-		classpath "com.fasterxml.jackson.core:jackson-databind:2.8.6"
-		classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.6"
-	}
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    // reading YAML
+    classpath "com.fasterxml.jackson.core:jackson-databind:2.8.6"
+    classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.6"
+  }
 }
 
 ext {
-	// образы, создаваемые docker'ом
-	docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web',
-	'spark', 'kafka', 'hadoop']
-	// образы, создаваемые docker'ом для которых необходимо копировать артефакты
-	docker_machines_w_artifacts = ['crawler', 'server_web']
+  // образы, создаваемые docker'ом
+  docker_machines = ['elasticsearch', 'zookeeper', 'mongodb', 'crawler', 'server_web',
+                     'spark', 'kafka', 'hadoop']
+  // образы, создаваемые docker'ом для которых необходимо копировать артефакты
+  docker_machines_w_artifacts = ['crawler', 'server_web']
 }
 
 /*
@@ -32,229 +32,229 @@ storyline_componenets:
   server_web:
     version: "presented"
 */
+
 def loadArtifactVersions(type) {
-	Map result = new HashMap()
-	def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
-	println "Reading artifact versions from ${name}"
-	if (new File(name).exists()) {
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		result = mapper.readValue(new FileInputStream(name), HashMap.class);
-	}
-	return  result['storyline_components'];
+  Map result = new HashMap()
+  def name = "${projectDir}/deployment/${type}/hieradata/version.yaml"
+  println "Reading artifact versions from ${name}"
+  if (new File(name).exists()) {
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    result = mapper.readValue(new FileInputStream(name), HashMap.class);
+  }
+  return result['storyline_components'];
 }
 
 // получить итоговый артефакт от проекта (не RELELEASE) - RELEASE берётся puppet при деплое
 def getCurrentProjectBuild(projectName, machineObj) {
-	println "Getting artifact version for ${projectName}"
-	if (machineObj['version'] == "presented") {
-		println "Getting artifact from ${projectName}"
-		// try first "*all.jar" (fatJar)
-		File libsDir =  project(":${projectName}").libsDir
-		def allCollection = libsDir.listFiles().findAll{ it.name.endsWith('all.jar')}
-		if (allCollection.size != 0) return allCollection[0];
-		// try second "*.jar"
-		def collection = libsDir.listFiles().findAll{ it.name.contains('.jar')}
-		if (collection.size != 0) return collection[0];
-		// в случае если не смогли ничего скопировать -это ошибка
-		throw new RuntimeException("Not found 'presented' artifacts for ${projectName}.")
-	}
-	return null;
+  println "Getting artifact version for ${projectName}"
+  if (machineObj['version'] == "presented") {
+    println "Getting artifact from ${projectName}"
+    // try first "*all.jar" (fatJar)
+    File libsDir = project(":${projectName}").libsDir
+    def allCollection = libsDir.listFiles().findAll { it.name.endsWith('all.jar') }
+    if (allCollection.size != 0) return allCollection[0];
+    // try second "*.jar"
+    def collection = libsDir.listFiles().findAll { it.name.contains('.jar') }
+    if (collection.size != 0) return collection[0];
+    // в случае если не смогли ничего скопировать -это ошибка
+    throw new RuntimeException("Not found 'presented' artifacts for ${projectName}.")
+  }
+  return null;
 
 }
 
-
 // create stand directories
 task createStandDir {
-	// with doLast - executes in execute pase (not in initialization/configaration)
-	doLast () {
-		println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
-		def dir = new File(project.ext.stand.deploy_dir);
-		dir.mkdirs();
-		println "Create stand logs dir '${project.ext.stand.logs_dir}'"
-		println "Create stand data dir '${project.ext.stand.data_dir}'"
-		// создать соотвествующие директории и выполнить настройку прав для всех УЗ
-		// т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
-		docker_machines.each {
-			dir = new File(project.ext.stand.data_dir + "/${it}");
-			dir.mkdirs();
-			dir.setWritable(true, false);
-			dir.setExecutable(true, false);
-			dir.setReadable(true, false);
-			dir = new File(project.ext.stand.logs_dir + "/${it}");
-			dir.mkdirs();
-			dir.setWritable(true, false);
-			dir.setExecutable(true, false);
-			dir.setReadable(true, false);
-		}
-	}
+  // with doLast - executes in execute pase (not in initialization/configaration)
+  doLast() {
+    println "Create stand deploy dir '${project.ext.stand.deploy_dir}'"
+    def dir = new File(project.ext.stand.deploy_dir);
+    dir.mkdirs();
+    println "Create stand logs dir '${project.ext.stand.logs_dir}'"
+    println "Create stand data dir '${project.ext.stand.data_dir}'"
+    // создать соотвествующие директории и выполнить настройку прав для всех УЗ
+    // т.к. сервисы в контейнере запускаются не под привелигированным польз-ем
+    docker_machines.each {
+      dir = new File(project.ext.stand.data_dir + "/${it}");
+      dir.mkdirs();
+      dir.setWritable(true, false);
+      dir.setExecutable(true, false);
+      dir.setReadable(true, false);
+      dir = new File(project.ext.stand.logs_dir + "/${it}");
+      dir.mkdirs();
+      dir.setWritable(true, false);
+      dir.setExecutable(true, false);
+      dir.setReadable(true, false);
+    }
+  }
 }
 
 // выполнить копирование шаблонов для docker с подстановкой значений
 docker_machines.each { machine ->
-	task "copyProvisionScripts_${machine}" (type: Copy, dependsOn: ['createStandDir']){
-		description "выполнить копирование provision-скриптов"
-		from "${projectDir}/deployment"
-		exclude("docker_templates")
-		into project.ext.stand.deploy_dir + "/${machine}"
-	}
+  task "copyProvisionScripts_${machine}"(type: Copy, dependsOn: ['createStandDir']) {
+    description "выполнить копирование provision-скриптов"
+    from "${projectDir}/deployment"
+    exclude("docker_templates")
+    into project.ext.stand.deploy_dir + "/${machine}"
+  }
 }
 
 // выполнить копирование скриптов для подготовки сервера
-task copyTemplates (type: Copy, dependsOn: ['createStandDir']){
-	description "выполнить копирование шаблонов"
-	from "${projectDir}/deployment/docker_templates"
-	into project.ext.stand.deploy_dir
-	expand(project.ext.stand)
-	exclude('systemctl.py') // systemd replacement
-	filteringCharset = 'UTF-8'
+task copyTemplates(type: Copy, dependsOn: ['createStandDir']) {
+  description "выполнить копирование шаблонов"
+  from "${projectDir}/deployment/docker_templates"
+  into project.ext.stand.deploy_dir
+  expand(project.ext.stand)
+  exclude('systemctl.py') // systemd replacement
+  filteringCharset = 'UTF-8'
 }
 
 // осуществить копирование артефактов - при наличии
-task copyCurrentArtifacts (dependsOn: ['createStandDir']) {
-	description "выполнить копирование необходимых артефактов"
-	doLast() { // lambda executed only in execution phase
-		def versions = loadArtifactVersions(project.ext.stand_type)
-		docker_machines_w_artifacts.each { machine ->
-			def res = getCurrentProjectBuild(machine, versions[machine])
-			if (res != null) {
-				// copy to "deploy_dir/${machine}/artifacts/same name.ext"
-				def dir = new File(project.ext.stand.deploy_dir + File.separator +
-					machine + File.separator + "artifacts")
-				dir.mkdirs();
-				def dst = new File(project.ext.stand.deploy_dir + File.separator +
-					machine + File.separator + "artifacts" + File.separator + res.name)
-				println "Copy ${res} to ${dst}"
-				dst.delete()
-				dst << res.bytes
-			}
-		}
-	}
+task copyCurrentArtifacts(dependsOn: ['createStandDir']) {
+  description "выполнить копирование необходимых артефактов"
+  doLast() { // lambda executed only in execution phase
+    def versions = loadArtifactVersions(project.ext.stand_type)
+    docker_machines_w_artifacts.each { machine ->
+      def res = getCurrentProjectBuild(machine, versions[machine])
+      if (res != null) {
+        // copy to "deploy_dir/${machine}/artifacts/same name.ext"
+        def dir = new File(project.ext.stand.deploy_dir + File.separator +
+            machine + File.separator + "artifacts")
+        dir.mkdirs();
+        def dst = new File(project.ext.stand.deploy_dir + File.separator +
+            machine + File.separator + "artifacts" + File.separator + res.name)
+        println "Copy ${res} to ${dst}"
+        dst.delete()
+        dst << res.bytes
+      }
+    }
+  }
 }
 
 // осуществить копирование scripts'оа для crawler
-task copyCrawlerScripts (dependsOn: ['createStandDir']) {
-	description "копирование scripts'оа для crawler"
-	doLast() { // lambda executed only in execution phase
-		def versions = loadArtifactVersions(project.ext.stand_type)
-		def res = getCurrentProjectBuild('crawler_scripts', versions['crawler_scripts'])
-		if (res != null) {
-			// copy to "deploy_dir/crawler/crawler_scripts/same name.ext"
-			def dir = new File(project.ext.stand.deploy_dir + File.separator +
-				"crawler/crawler_scripts")
-			dir.mkdirs();
-			def dst = new File(project.ext.stand.deploy_dir + File.separator +
-				"crawler/crawler_scripts" + File.separator + res.name)
-			println "Copy ${res} to ${dst}"
-			dst.delete()
-			dst << res.bytes
-		}
-	}
+task copyCrawlerScripts(dependsOn: ['createStandDir']) {
+  description "копирование scripts'оа для crawler"
+  doLast() { // lambda executed only in execution phase
+    def versions = loadArtifactVersions(project.ext.stand_type)
+    def res = getCurrentProjectBuild('crawler_scripts', versions['crawler_scripts'])
+    if (res != null) {
+      // copy to "deploy_dir/crawler/crawler_scripts/same name.ext"
+      def dir = new File(project.ext.stand.deploy_dir + File.separator +
+          "crawler/crawler_scripts")
+      dir.mkdirs();
+      def dst = new File(project.ext.stand.deploy_dir + File.separator +
+          "crawler/crawler_scripts" + File.separator + res.name)
+      println "Copy ${res} to ${dst}"
+      dst.delete()
+      dst << res.bytes
+    }
+  }
 }
 
 
-task prepareStand  (dependsOn: ['copyCurrentArtifacts', 'copyCrawlerScripts', 'copyTemplates']){
-	description "подготовить контейнеры для ручного/автоматического запуска"
+task prepareStand(dependsOn: ['copyCurrentArtifacts', 'copyCrawlerScripts', 'copyTemplates']) {
+  description "подготовить контейнеры для ручного/автоматического запуска"
 }
 prepareStand.dependsOn {
-    tasks.findAll { task -> task.name.startsWith('copyProvisionScripts') }
+  tasks.findAll { task -> task.name.startsWith('copyProvisionScripts') }
 }
 
-task startContainers (type:Exec, dependsOn: ['prepareStand']){
-	description "запустить контейнеры"
-	workingDir project.ext.stand.deploy_dir
-	commandLine './docker_up.sh'
+task startContainers(type: Exec, dependsOn: ['prepareStand']) {
+  description "запустить контейнеры"
+  workingDir project.ext.stand.deploy_dir
+  commandLine './docker_up.sh'
 }
 
-task runStand (dependsOn: ['startContainers']) {
-	description "выполнить развертывание стенда"
+task runStand(dependsOn: ['startContainers']) {
+  description "выполнить развертывание стенда"
 }
 
 
-task stopStand (dependsOn: ['stopContainers']) {
-	description "выполнить 'сворачивание' стенда"
+task stopStand(dependsOn: ['stopContainers']) {
+  description "выполнить 'сворачивание' стенда"
 }
 
-task stopContainers (type:Exec){
-	description "остановить контейнеры"
-	workingDir project.ext.stand.deploy_dir
-	commandLine './docker_down.sh'
+task stopContainers(type: Exec) {
+  description "остановить контейнеры"
+  workingDir project.ext.stand.deploy_dir
+  commandLine './docker_down.sh'
 }
 
 // create per project files
 allprojects {
-	def prj = it
-	// don't create these tasks for non-java projects (for this time)
-	if (!prj.ext.has("isJavaProject") ) return;
+  def prj = it
+  // don't create these tasks for non-java projects (for this time)
+  if (!prj.ext.has("isJavaProject")) return;
 
-	task gitByTagVersion(type:Exec)  {
-		// def props = loadProjectProperties(prj)
-		description "Create tag in local git by version in file"
-		workingDir prj.projectDir
-		//on linux
-		commandLine "git",  "tag", "${prj.version}", "--message=Gradle Release at ${new Date()}"
-	}
+  task gitByTagVersion(type: Exec) {
+    // def props = loadProjectProperties(prj)
+    description "Create tag in local git by version in file"
+    workingDir prj.projectDir
+    //on linux
+    commandLine "git", "tag", "${prj.version}", "--message=Gradle Release at ${new Date()}"
+  }
 
-	// execute only in execution phase
-	gitByTagVersion.doFirst {
-		if(prj.version.endsWith('-SNAPSHOT')) {
-			def msg = "Cannot create release with version: ${prj.version} (need set stable version in properties file)"
-			logger.error(msg)
-			throw new IllegalStateException(msg)
-		}
-	}
+  // execute only in execution phase
+  gitByTagVersion.doFirst {
+    if (prj.version.endsWith('-SNAPSHOT')) {
+      def msg = "Cannot create release with version: ${prj.version} (need set stable version in properties file)"
+      logger.error(msg)
+      throw new IllegalStateException(msg)
+    }
+  }
 
-	task gitPush(type:Exec) {
-		description "Push tag in remote storage"
-		workingDir prj.projectDir
-		//on linux
-		commandLine "git",  "push" , "origin", "--tags"
-	}
+  task gitPush(type: Exec) {
+    description "Push tag in remote storage"
+    workingDir prj.projectDir
+    //on linux
+    commandLine "git", "push", "origin", "--tags"
+  }
 
-	// **** uploading
-	// upload to nexus/artifactory
-	// good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
-	if (project(':crawler') != prj && project(':server_storm') != prj && project(':server_web') != prj) {
-		apply plugin: 'maven-publish'
-		publishing {
-			publications {
-				mavenJava(MavenPublication) {
-					groupId 'ru.nlp_project.story_line2'
-					artifactId artifactId
-					version prj.version
-					from components.java
-				}
-			}
-			repositories {
-				maven {
-					credentials {
-						username "deployment"
-						password "deployment"
-					}
-					if(project.version.endsWith('-SNAPSHOT')) {
-						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-					}  else {
-						url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-					}
-				}
-			}
-		}
-	} // if (project(':crawler') != prj && project(':server_storm') != prj) {
+  // **** uploading
+  // upload to nexus/artifactory
+  // good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
+  if (project(':crawler') != prj && project(':server_storm') != prj && project(':server_web') != prj) {
+    apply plugin: 'maven-publish'
+    publishing {
+      publications {
+        mavenJava(MavenPublication) {
+          groupId 'ru.nlp_project.story_line2'
+          artifactId artifactId
+          version prj.version
+          from components.java
+        }
+      }
+      repositories {
+        maven {
+          credentials {
+            username "deployment"
+            password "deployment"
+          }
+          if (project.version.endsWith('-SNAPSHOT')) {
+            url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+          } else {
+            url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+          }
+        }
+      }
+    }
+  } // if (project(':crawler') != prj && project(':server_storm') != prj) {
 
-	publishToMavenLocal.dependsOn build
-	task deployLocal (dependsOn: publishToMavenLocal) {
-		description "Install in local repo"
-	}
+  publishToMavenLocal.dependsOn build
+  task deployLocal(dependsOn: publishToMavenLocal) {
+    description "Install in local repo"
+  }
 
-	task deploy (dependsOn: publish) {
-		description "Install in remote repo"
-	}
+  task deploy(dependsOn: publish) {
+    description "Install in remote repo"
+  }
 
 
-	gitByTagVersion.dependsOn build
-	gitPush.dependsOn gitByTagVersion
-	task release (dependsOn: [gitPush, publish]) {
-		//need to run "git config credential.helper store" in git project's directory
-		description "Make release of module (assign tag, push tag to git, publish)"
-	}
+  gitByTagVersion.dependsOn build
+  gitPush.dependsOn gitByTagVersion
+  task release(dependsOn: [gitPush, publish]) {
+    //need to run "git config credential.helper store" in git project's directory
+    description "Make release of module (assign tag, push tag to git, publish)"
+  }
 
 }

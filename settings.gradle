@@ -1,2 +1,4 @@
-include 'config', 'morph', 'token', 'glr_parser', 'glr_parser_debugger', 'glr_parser_testing', 'crawler',  'analyser', \
-'geo', 'crawler_scripts', 'server_web', 'server_storm', 'server_akka'
+enableFeaturePreview('STABLE_PUBLISHING')
+
+include 'config', 'morph', 'token', 'glr_parser', 'glr_parser_debugger', 'glr_parser_testing', 'crawler', 'analyser',  \
+ 'geo', 'crawler_scripts', 'server_web', 'server_storm', 'server_akka'

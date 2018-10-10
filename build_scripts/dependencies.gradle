@@ -1,549 +1,560 @@
 // project dependencies
 ext {
-VELOCITY_VER='1.7'
-JACKSON_VER='2.8.6'
-COMMONS_IO_VER='2.6'
-COMMONS_LANG_VER='3.8'
-COMMONS_POOL_VER='2.4.2'
-DROPWIZARD_CORE_VER='1.1.0'
-DROPWIZARD_METRICS_VER='3.2.5'
-DROPWIZARD_METRICS_INFLUXDB_VER='0.9.3'
-JSOUP_VER='1.11.3'
-STORM_VER='1.1.1'
-JODATIME_VER='2.9.7'
-ELASTICSEARCH_CLIENT_TRANSPORT_VER='5.1.1'
-MONGO_JAVA_DRIVER_VER='3.4.2'
-MONGO_SPARK_CONNECTOR_VER='2.2.1'
-DAGGER_VER='2.17'
-CRAWLER4J_VER='4.2'
-GROOVY_VER='2.5.2'
-SPRING_BOOT_STARTER_VER='2.0.4.RELEASE'
+  VELOCITY_VER = '1.7'
+  JACKSON_VER = '2.8.6'
+  COMMONS_IO_VER = '2.6'
+  COMMONS_LANG_VER = '3.8'
+  COMMONS_POOL_VER = '2.4.2'
+  DROPWIZARD_CORE_VER = '1.1.0'
+  DROPWIZARD_METRICS_VER = '3.2.5'
+  DROPWIZARD_METRICS_INFLUXDB_VER = '0.9.3'
+  JSOUP_VER = '1.11.3'
+  STORM_VER = '1.1.1'
+  JODATIME_VER = '2.9.7'
+  ELASTICSEARCH_CLIENT_TRANSPORT_VER = '5.1.1'
+  MONGO_JAVA_DRIVER_VER = '3.4.2'
+  MONGO_SPARK_CONNECTOR_VER = '2.2.1'
+  DAGGER_VER = '2.17'
+  CRAWLER4J_VER = '4.2'
+  GROOVY_VER = '2.5.2'
+  SPRING_BOOT_STARTER_VER = '2.0.4.RELEASE'
+  KAFKA_VER = '2.0.0'
+  ZOOKEEPER_VER = '3.4.13'
 
 // akkk
-AKKA_VER= '2.5.15'
-AKKA_SCALA_VER = '2.12'
-AKKA_SCALA_LIBRARY_VER = '2.12.6'
-AKKA_SCALA_TEST_VER = '3.0.5'
+  AKKA_VER = '2.5.15'
+  AKKA_SCALA_VER = '2.12'
+  AKKA_SCALA_LIBRARY_VER = '2.12.6'
+  AKKA_SCALA_TEST_VER = '3.0.5'
+
 // spark
-SPARK_VER = '2.3.1'
-SPARK_SCALA_VER = '2.11'
+  SPARK_VER = '2.3.1'
+  SPARK_SCALA_VER = '2.11'
+
+// logging
+  SLF4J_VER = '1.7.25'
+  LOGBACK_VER = '1.2.3'
 
 // test scala
-SPARK_SCALA_LIBRARY_VER = '2.11.12'
-SPARK_SCALA_TEST_VER = '3.0.5'
-PEGDOWN_SCALA_TEST_VER = '1.6.0'
+  SPARK_SCALA_LIBRARY_VER = '2.11.12'
+  SPARK_SCALA_TEST_VER = '3.0.5'
+  PEGDOWN_SCALA_TEST_VER = '1.6.0'
 
 // my
-STORY_LINE2_GLR_PARSER_VER='0.6'
-STORY_LINE2_CONFIG_VER='0.2'
-STORY_LINE2_MORPH_VER='0.4'
-STORY_LINE2_TOKEN_VER='0.1'
+  STORY_LINE2_GLR_PARSER_VER = '0.6'
+  STORY_LINE2_CONFIG_VER = '0.2'
+  STORY_LINE2_MORPH_VER = '0.4'
+  STORY_LINE2_TOKEN_VER = '0.1'
+
 // test
-TEST_JUNIT_VER='4.12'
-TEST_MOCKITO_VER='2.21.0'
-TEST_ASSERTJ_VER='3.11.0'
+  TEST_JUNIT_VER = '4.12'
+  TEST_MOCKITO_VER = '2.21.0'
+  TEST_ASSERTJ_VER = '3.11.0'
+  TEST_JSONASSERT_VER = '1.5.0'
 }
 
 project(':config') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	dependencies {
-        compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${JACKSON_VER}"
-    }
+  dependencies {
+    compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${JACKSON_VER}"
+  }
 }
 
 project(':server_web') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
-	javaSpringBootProject(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
+  javaSpringBootProject(it)
 
-	// to find 'ring-cors:ring-cors:0.+'
-	repositories {
-		maven { url "http://clojars.org/repo" }
-	}
+  // to find 'ring-cors:ring-cors:0.+'
+  repositories {
+    maven { url "http://clojars.org/repo" }
+  }
 
-	dependencies {
-		compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
-		// spring cache
-		compile("org.springframework:spring-context-support")
-		compile "javax.cache:cache-api:1.0.0"
-		compile "org.ehcache:ehcache:3.4.0"
-		compile "org.apache.commons:commons-pool2:${COMMONS_POOL_VER}"
-		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
-		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
-		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
-		compile ("org.apache.storm:storm-core:${STORM_VER}") {
-			exclude module: 'servlet-api'
-			exclude group: 'org.slf4j', module: 'slf4j-api'
-			exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-			exclude group: 'ch.qos.logback', module: 'logback-classic'
-			exclude group: 'ch.qos.logback', module: 'logback-core'
-			exclude group: 'org.clojure', module: 'clojure'
-			exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
-			exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
-			exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
-			exclude group: 'com.lmax', module: 'disruptor'
-			exclude group: 'com.esotericsoftware', module: 'kryo'
-			exclude group: 'ring-cors', module: 'ring-cors'
-		}
-	}
-	def mainClassName = "ru.nlp_project.story_line2.server_web.ServerWebApplication"
+  dependencies {
+    compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+    // spring cache
+    compile("org.springframework:spring-context-support")
+    compile "javax.cache:cache-api:1.0.0"
+    compile "org.ehcache:ehcache:3.4.0"
+    compile "org.apache.commons:commons-pool2:${COMMONS_POOL_VER}"
+    compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+    compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+    compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
+    compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+    compile("org.apache.storm:storm-core:${STORM_VER}") {
+      exclude module: 'servlet-api'
+      exclude group: 'org.slf4j', module: 'slf4j-api'
+      exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
+      exclude group: 'ch.qos.logback', module: 'logback-classic'
+      exclude group: 'ch.qos.logback', module: 'logback-core'
+      exclude group: 'org.clojure', module: 'clojure'
+      exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+      exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
+      exclude group: 'org.apache.logging.log4j', module: 'log4j-api'
+      exclude group: 'com.lmax', module: 'disruptor'
+      exclude group: 'com.esotericsoftware', module: 'kryo'
+      exclude group: 'ring-cors', module: 'ring-cors'
+    }
+  }
+  def mainClassName = "ru.nlp_project.story_line2.server_web.ServerWebApplication"
 
-	bootRepackage {
-		// enable repackaging in uber/fat jar
-	    enabled = true
-	}
-	springBoot {
-		// remove small jar file with only project classes
-	    backupSource = false
-	}
+  bootRepackage {
+    // enable repackaging in uber/fat jar
+    enabled = true
+  }
+  springBoot {
+    // remove small jar file with only project classes
+    backupSource = false
+  }
 
-	apply plugin: 'maven-publish'
-	publishing {
-	    publications {
-	        mavenJava(MavenPublication) {
-				groupId 'ru.nlp_project.story_line2'
-            	artifactId artifactId
-				version it.version
-	            from components.java
-	        }
-	    }
-		repositories {
-	        maven {
-	            credentials {
-	                username "deployment"
-					password "deployment"
-	            }
-	            if(project.version.endsWith('-SNAPSHOT')) {
-					// publish only RELEASES
-					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-	            } else {
-	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-	            }
-	        }
-	    }
-	} // publishing
-	//	run bootRepackage ahead with removing small jar
-	publish.dependsOn = ['bootRepackage']
+  apply plugin: 'maven-publish'
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        groupId 'ru.nlp_project.story_line2'
+        artifactId artifactId
+        version it.version
+        from components.java
+      }
+    }
+    repositories {
+      maven {
+        credentials {
+          username "deployment"
+          password "deployment"
+        }
+        if (project.version.endsWith('-SNAPSHOT')) {
+          // publish only RELEASES
+          // url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+        } else {
+          url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+        }
+      }
+    }
+  } // publishing
+  //	run bootRepackage ahead with removing small jar
+  publish.dependsOn = ['bootRepackage']
 }
 
 project(':server_storm') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	// to find 'ring-cors:ring-cors:0.+'
-	repositories {
-		maven { url "http://clojars.org/repo" }
-	}
+  // to find 'ring-cors:ring-cors:0.+'
+  repositories {
+    maven { url "http://clojars.org/repo" }
+  }
 
-	apply plugin: "net.ltgt.apt"
-	dependencies {
-		compile ("org.apache.storm:storm-core:${STORM_VER}") {
-			// log4j-slf4j-impl-2.1
-			exclude module: 'log4j-slf4j-impl'
-		}
-		compile "joda-time:joda-time:${JODATIME_VER}"
+  apply plugin: "net.ltgt.apt"
+  dependencies {
+    compile("org.apache.storm:storm-core:${STORM_VER}") {
+      // log4j-slf4j-impl-2.1
+      exclude module: 'log4j-slf4j-impl'
+    }
+    compile "joda-time:joda-time:${JODATIME_VER}"
 
-		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
-	    compile "org.jsoup:jsoup:${JSOUP_VER}"
-		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
-		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
-		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
-		compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
-		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
-		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
-		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
-		// Dagger dependencies
-		compile "com.google.dagger:dagger:${DAGGER_VER}"
-		// Dagger dependencies
-		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
-	}
+    compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+    compile "org.jsoup:jsoup:${JSOUP_VER}"
+    compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+    compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+    compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+    compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
+    compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+    compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+    compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
+    compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+    // Dagger dependencies
+    compile "com.google.dagger:dagger:${DAGGER_VER}"
+    // Dagger dependencies
+    apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
+  }
 
-	apply plugin: 'com.github.johnrengelman.shadow'
+  apply plugin: 'com.github.johnrengelman.shadow'
 
-	shadowJar {
-		dependencies {
-      		exclude (dependency('org.apache.storm:storm-core'))
-			exclude (dependency('org.slf4j:slf4j-api'))
-			exclude (dependency('org.slf4j:log4j-over-slf4j'))
-			exclude (dependency('ch.qos.logback:logback-classic'))
-			exclude (dependency('ch.qos.logback:logback-core'))
-			exclude (dependency('org.clojure:clojure'))
-			exclude (dependency('org.apache.logging.log4j:log4j-slf4j-impl'))
-			exclude (dependency('org.apache.logging.log4j:log4j-core'))
-			exclude (dependency('org.apache.logging.log4j:log4j-api'))
-			exclude (dependency('javax.servlet:servlet-api'))
-			exclude (dependency('com.lmax:disruptor'))
-			exclude (dependency('com.esotericsoftware:kryo'))
-   		}
-		mergeServiceFiles()
-	  	manifest {
-			attributes 'Description': 'This is an application JAR'
-	    	// attributes "Main-Class": "$mainClassName"
-	 	}
-	}
+  shadowJar {
+    dependencies {
+      exclude(dependency('org.apache.storm:storm-core'))
+      exclude(dependency('org.slf4j:slf4j-api'))
+      exclude(dependency('org.slf4j:log4j-over-slf4j'))
+      exclude(dependency('ch.qos.logback:logback-classic'))
+      exclude(dependency('ch.qos.logback:logback-core'))
+      exclude(dependency('org.clojure:clojure'))
+      exclude(dependency('org.apache.logging.log4j:log4j-slf4j-impl'))
+      exclude(dependency('org.apache.logging.log4j:log4j-core'))
+      exclude(dependency('org.apache.logging.log4j:log4j-api'))
+      exclude(dependency('javax.servlet:servlet-api'))
+      exclude(dependency('com.lmax:disruptor'))
+      exclude(dependency('com.esotericsoftware:kryo'))
+    }
+    mergeServiceFiles()
+    manifest {
+      attributes 'Description': 'This is an application JAR'
+      // attributes "Main-Class": "$mainClassName"
+    }
+  }
 
-	build.dependsOn('shadowJar')
+  build.dependsOn('shadowJar')
 
-	apply plugin: 'maven-publish'
-	publishing {
-	    publications {
-	        mavenJava(MavenPublication) {
-				groupId 'ru.nlp_project.story_line2'
-            	artifactId artifactId
-				version it.version
-	            from components.shadow
-	        }
-	    }
-		repositories {
-	        maven {
-	            credentials {
-	                username "deployment"
-					password "deployment"
-	            }
-	            if(project.version.endsWith('-SNAPSHOT')) {
-					// publish only RELEASES
-					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-	            } else {
-	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-	            }
-	        }
-	    }
-	} // publishing
+  apply plugin: 'maven-publish'
+  publishing {
+    publications {
+      shadow(MavenPublication) { publication ->
+        project.shadow.component(publication)
+      }
+    }
+    repositories {
+      maven {
+        credentials {
+          username "deployment"
+          password "deployment"
+        }
+        if (project.version.endsWith('-SNAPSHOT')) {
+          // publish only RELEASES
+          // url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+        } else {
+          url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+        }
+      }
+    }
+  } // publishing
 }
 
 project(':analyser') {
-	scalaProject(it, SPARK_SCALA_LIBRARY_VER)
-	// javaLogLibrary(it)
-	scalaTestLibrary(it, SPARK_SCALA_VER, SPARK_SCALA_TEST_VER)
+  scalaProject(it, SPARK_SCALA_LIBRARY_VER)
+  // javaLogLibrary(it)
+  scalaTestLibrary(it, SPARK_SCALA_VER, SPARK_SCALA_TEST_VER)
 
-	dependencies {
-		testCompile "org.apache.spark:spark-mllib-local_${SPARK_SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-core_${SPARK_SCALA_VER}:${SPARK_VER}"
-		compile "org.apache.spark:spark-sql_${SPARK_SCALA_VER}:${SPARK_VER}"
-		// https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector
-		compile  "org.mongodb.spark:mongo-spark-connector_${SPARK_SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
+  dependencies {
+    testCompile "org.apache.spark:spark-mllib-local_${SPARK_SCALA_VER}:${SPARK_VER}"
+    compile "org.apache.spark:spark-core_${SPARK_SCALA_VER}:${SPARK_VER}"
+    compile "org.apache.spark:spark-sql_${SPARK_SCALA_VER}:${SPARK_VER}"
+    // https://mvnrepository.com/artifact/org.mongodb.spark/mongo-spark-connector
+    compile "org.mongodb.spark:mongo-spark-connector_${SPARK_SCALA_VER}:${MONGO_SPARK_CONNECTOR_VER}"
 
-	    // compile "org.jsoup:jsoup:${JSOUP_VER}"
-        // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
-        // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
-    }
+    // compile "org.jsoup:jsoup:${JSOUP_VER}"
+    // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+    // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
+  }
 
 
-	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
-		main = 'org.scalatest.tools.Runner'
-		args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
-	classpath = sourceSets.test.runtimeClasspath
-	}
-	test.dependsOn scalaTest
+  task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+    main = 'org.scalatest.tools.Runner'
+    args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
+    classpath = sourceSets.test.runtimeClasspath
+  }
+  test.dependsOn scalaTest
 }
 
 project(':server_akka') {
-	scalaProject(it, AKKA_SCALA_LIBRARY_VER)
-	// javaLogLibrary(it)
-	scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
+  scalaProject(it, AKKA_SCALA_LIBRARY_VER)
+  // javaLogLibrary(it)
+  scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
 
-	dependencies {
-		compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
-		testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
-    }
+  dependencies {
+    compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
+    testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
+  }
 
-	task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
-		main = 'org.scalatest.tools.Runner'
-		// http://www.scalatest.org/user_guide/using_the_runner
-		args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
-	classpath = sourceSets.test.runtimeClasspath
-	}
-	test.dependsOn scalaTest
+  task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
+    main = 'org.scalatest.tools.Runner'
+    // http://www.scalatest.org/user_guide/using_the_runner
+    args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
+    classpath = sourceSets.test.runtimeClasspath
+  }
+  test.dependsOn scalaTest
 
 }
 
 project(':geo') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 }
 
 project(':crawler') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
-	javaSpringBootProject(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
+  javaSpringBootProject(it)
 
-	// to find 'com.sleepycat:je'
-	repositories {
-		maven { url "http://download.oracle.com/maven" }
-	}
+  // to find 'com.sleepycat:je'
+  repositories {
+    maven { url "http://download.oracle.com/maven" }
+  }
 
-	dependencies {
-		// BSON Jackson mapper
-		compile 'de.undercouch:bson4jackson:2.7.0'
-		// sheduler enging
-		compile 'org.quartz-scheduler:quartz:2.2.3'
-		// feed parser
-		compile 'com.rometools:rome:1.7.1'
-		compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
-		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile "ru.nlp_project.story_line2:crawler4j:4.4.0"
+  dependencies {
+    // sheduler enging
+    compile 'org.quartz-scheduler:quartz:2.2.3'
+    // feed parser
+    compile 'com.rometools:rome:1.7.1'
+    compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+    compile "ru.nlp_project.story_line2:crawler4j:4.4.0"
+    // kafka
+    compile "org.apache.kafka:kafka-clients:${KAFKA_VER}"
 
-		// compile "org.springframework:spring-context-support"
-		compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
-		compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
-		compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+    // metrics
+    compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+    compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
+    compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
 
-		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
-	    compile "org.jsoup:jsoup:${JSOUP_VER}"
-		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-	}
-	// Include dependent libraries in archive.
-	def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
+    compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+    compile "org.jsoup:jsoup:${JSOUP_VER}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
 
-	bootRepackage {
-		// enable repackaging in uber/fat jar
-	    enabled = true
-	}
-	springBoot {
-		// remove small jar file with only project classes
-	    backupSource = false
-	}
+    // functional tests
+    testCompile("org.apache.zookeeper:zookeeper:${ZOOKEEPER_VER}") {
+      exclude module: 'slf4j-log4j12'
+    }
+    testCompile "org.apache.kafka:kafka_2.12:${KAFKA_VER}"
+  }
 
-	apply plugin: 'maven-publish'
-	publishing {
-	    publications {
-	        mavenJava(MavenPublication) {
-				groupId 'ru.nlp_project.story_line2'
-            	artifactId artifactId
-				version it.version
-	            from components.java
-	        }
-	    }
-		repositories {
-	        maven {
-	            credentials {
-	                username "deployment"
-					password "deployment"
-	            }
-	            if(project.version.endsWith('-SNAPSHOT')) {
-					// publish only RELEASES
-					// url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-	            } else {
-	                url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-	            }
-	        }
-	    }
-	} // publishing
+  // Include dependent libraries in archive.
+  def mainClassName = "ru.nlp_project.story_line2.crawler.CrawlerApplication"
+
+  bootRepackage {
+    // enable repackaging in uber/fat jar
+    enabled = true
+  }
+
+  springBoot {
+    // remove small jar file with only project classes
+    backupSource = false
+  }
+
+  apply plugin: 'maven-publish'
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        groupId 'ru.nlp_project.story_line2'
+        artifactId artifactId
+        version it.version
+        from components.java
+      }
+    }
+    repositories {
+      maven {
+        credentials {
+          username "deployment"
+          password "deployment"
+        }
+        if (project.version.endsWith('-SNAPSHOT')) {
+          // publish only RELEASES
+          // url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+        } else {
+          url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+        }
+      }
+    }
+  } // publishing
 
 }
-
 
 project(':crawler_scripts') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	dependencies {
-		compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
-		compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
-		compile "org.jsoup:jsoup:${JSOUP_VER}"
-		compile "joda-time:joda-time:${JODATIME_VER}"
-		compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-	}
+  dependencies {
+    compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+    compile "edu.uci.ics:crawler4j:${CRAWLER4J_VER}"
+    compile "org.jsoup:jsoup:${JSOUP_VER}"
+    compile "joda-time:joda-time:${JODATIME_VER}"
+    compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+  }
 }
 
-
-
 project(':glr_parser_debugger') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	dependencies {
-        compile "org.apache.velocity:velocity:${VELOCITY_VER}"
-        compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
-    }
+  dependencies {
+    compile "org.apache.velocity:velocity:${VELOCITY_VER}"
+    compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+  }
 }
 
 project(':glr_parser_testing') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	dependencies {
-		compile "org.jsoup:jsoup:${JSOUP_VER}"
-		compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
-    }
+  dependencies {
+    compile "org.jsoup:jsoup:${JSOUP_VER}"
+    compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
+  }
 }
 
 project(':glr_parser') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	// before dependencies with annotation processing
-	apply plugin: "net.ltgt.apt"
-	dependencies {
-	    compile 'com.beust:jcommander:1.47'
-    	compile 'org.antlr:antlr4:4.3'
-		compile 'org.apache.commons:commons-collections4:4.1'
-		compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
-        compile "ru.nlp_project.story_line2:token:${STORY_LINE2_TOKEN_VER}"
-        compile "ru.nlp_project.story_line2:morph:${STORY_LINE2_MORPH_VER}"
-		compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
-		// Dagger dependencies
-		compile "com.google.dagger:dagger:${DAGGER_VER}"
-		// Dagger dependencies
-		apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
-    }
+  // before dependencies with annotation processing
+  apply plugin: "net.ltgt.apt"
+  dependencies {
+    compile 'com.beust:jcommander:1.47'
+    compile 'org.antlr:antlr4:4.3'
+    compile 'org.apache.commons:commons-collections4:4.1'
+    compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
+    compile "ru.nlp_project.story_line2:token:${STORY_LINE2_TOKEN_VER}"
+    compile "ru.nlp_project.story_line2:morph:${STORY_LINE2_MORPH_VER}"
+    compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
+    // Dagger dependencies
+    compile "com.google.dagger:dagger:${DAGGER_VER}"
+    // Dagger dependencies
+    apt "com.google.dagger:dagger-compiler:${DAGGER_VER}"
+  }
 }
 
 project(':morph') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
 
-	dependencies {
+  dependencies {
 //	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
-		compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile 'net.sf.ehcache:ehcache-core:2.6.10'
-		compile 'org.apache.commons:commons-lang3:3.3.2'
-		compile "com.fasterxml.jackson.core:jackson-core:${JACKSON_VER}"
-	}
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+    compile 'net.sf.ehcache:ehcache-core:2.6.10'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile "com.fasterxml.jackson.core:jackson-core:${JACKSON_VER}"
+  }
 }
 
 project(':token') {
-	javaProject(it)
-	javaLogLibrary(it)
-	javaTestLibrary(it)
+  javaProject(it)
+  javaLogLibrary(it)
+  javaTestLibrary(it)
 
-	dependencies {
-	    compile "commons-io:commons-io:${COMMONS_IO_VER}"
-		compile 'org.apache.commons:commons-lang3:3.3.2'
-		compile 'org.apache.opennlp:opennlp-tools:1.5.3'
-	}
+  dependencies {
+    compile "commons-io:commons-io:${COMMONS_IO_VER}"
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.opennlp:opennlp-tools:1.5.3'
+  }
 }
 
 def scalaProject(project, scalaLibVer) {
-	project.ext.isScalaProject = true
-	project.apply plugin: 'scala'
+  project.ext.isScalaProject = true
+  project.apply plugin: 'scala'
 
-	project.repositories {
-		mavenCentral()
-		mavenLocal()
+  project.repositories {
+    mavenCentral()
+    mavenLocal()
 
-		maven {
-			name "local-snapshots"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-  		}
-		maven {
-			name "local-releases"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-  		}
-		maven {
-			name "remote-snapshots"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-  		}
-		maven {
-			name "remote-releases"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-  		}
+    maven {
+      name "local-snapshots"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
     }
+    maven {
+      name "local-releases"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+    }
+    maven {
+      name "remote-snapshots"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+    }
+    maven {
+      name "remote-releases"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+    }
+  }
 
-	project.dependencies {
-		compile "org.scala-lang:scala-library:${scalaLibVer}"
-	}
+  project.dependencies {
+    compile "org.scala-lang:scala-library:${scalaLibVer}"
+  }
 }
-
 
 
 def javaProject(project) {
-	project.ext.isJavaProject = true
-	project.apply plugin: 'java'
+  project.ext.isJavaProject = true
+  project.apply plugin: 'java'
+  project.apply plugin: 'io.franzbecker.gradle-lombok'
 
-	project.repositories {
-		mavenCentral()
-		mavenLocal()
+  project.repositories {
+    mavenCentral()
+    mavenLocal()
 
-		maven {
-			name "local-snapshots"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-  		}
-		maven {
-			name "local-releases"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-  		}
-		maven {
-			name "remote-snapshots"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
-  		}
-		maven {
-			name "remote-releases"
-			url  "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
-  		}
+    maven {
+      name "local-snapshots"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
     }
+    maven {
+      name "local-releases"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+    }
+    maven {
+      name "remote-snapshots"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/snapshots/"
+    }
+    maven {
+      name "remote-releases"
+      url "http://repo.nlp-project.ru:8082/nexus/content/repositories/releases/"
+    }
+  }
 }
 
 def javaLogLibrary(project) {
-    project.dependencies {
-		/*
-		Logback-classic module requires the presence of slf4j-api.jar and
-		logback-core.jar in addition to logback-classic.jar on the classpath.
-		*/
-		compile 'org.slf4j:slf4j-api:1.7.22'
-		compile 'ch.qos.logback:logback-classic:1.1.8'
-    }
+  project.dependencies {
+    /*
+    Logback-classic module requires the presence of slf4j-api.jar and
+    logback-core.jar in addition to logback-classic.jar on the classpath.
+    */
+    compile "org.slf4j:slf4j-api:${SLF4J_VER}"
+    compile "ch.qos.logback:logback-classic:${LOGBACK_VER}"
+  }
 }
 
 def javaTestLibrary(project) {
-    project.dependencies {
-		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
-		testCompile "junit:junit:${TEST_JUNIT_VER}"
-		testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
-		testCompile  "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
-    }
+  project.dependencies {
+    testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
+    testCompile "junit:junit:${TEST_JUNIT_VER}"
+    testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
+    testCompile "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
+    testCompile "org.skyscreamer:jsonassert:${TEST_JSONASSERT_VER}"
+  }
 }
 
 def scalaTestLibrary(project, scalaVer, scalaTestVer) {
-    project.dependencies {
-		testCompile "org.scalatest:scalatest_${scalaVer}:${scalaTestVer}"
-		testCompile "org.pegdown:pegdown:${PEGDOWN_SCALA_TEST_VER}"
+  project.dependencies {
+    testCompile "org.scalatest:scalatest_${scalaVer}:${scalaTestVer}"
+    testCompile "org.pegdown:pegdown:${PEGDOWN_SCALA_TEST_VER}"
 
-		testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
-		testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
-		testCompile "junit:junit:${TEST_JUNIT_VER}"
-		testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
-		testCompile  "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
-    }
+    testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+    testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
+    testCompile "junit:junit:${TEST_JUNIT_VER}"
+    testCompile "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
+    testCompile "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
+  }
 }
 
 
 def javaSpringBootProject(project) {
-	project.apply plugin: 'org.springframework.boot'
-    project.dependencies {
-		compile("org.springframework.boot:spring-boot-starter-web") {
-			exclude module: "spring-boot-starter-tomcat"
-		}
-		compile("org.springframework.boot:spring-boot-starter-jetty")
-		// end::jetty[]
-		// tag::actuator[]
-		compile("org.springframework.boot:spring-boot-starter-actuator")
-		// end::actuator[]
-		// testCompile("org.springframework.boot:spring-boot-starter-test")
-		testCompile("org.springframework.boot:spring-boot-test")
-		testCompile("org.springframework.boot:spring-boot-test-autoconfigure")
-		testCompile("org.springframework:spring-test")
-	}
+  project.apply plugin: 'org.springframework.boot'
+  project.dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+      exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    // end::jetty[]
+    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    // end::actuator[]
+    // testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.boot:spring-boot-test")
+    testCompile("org.springframework.boot:spring-boot-test-autoconfigure")
+    testCompile("org.springframework:spring-test")
+  }
 }

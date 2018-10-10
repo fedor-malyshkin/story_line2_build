@@ -1,52 +1,51 @@
 apply plugin: 'build-dashboard' // adds "buildDashboard" task
 
 buildscript {
-	repositories {
-        mavenCentral()
-		jcenter()
-    	maven {
-      		url "https://plugins.gradle.org/m2/"
-    	}
-		maven { url 'http://repo.spring.io/snapshot' }
-        maven { url 'http://repo.spring.io/milestone' }
-  	}
+  repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    maven { url 'http://repo.spring.io/snapshot' }
+    maven { url 'http://repo.spring.io/milestone' }
+  }
 
- 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
-		// shadow-plugin (http://imperceptiblethoughts.com/shadow/)
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-		// annotation processor https://plugins.gradle.org/plugin/net.ltgt.apt
-		classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
-	}
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
+    // shadow-plugin (http://imperceptiblethoughts.com/shadow/)
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    // annotation processor https://plugins.gradle.org/plugin/net.ltgt.apt
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+    classpath "io.franzbecker:gradle-lombok:1.14"
+  }
 }
-
 
 // загрузить properties в зависимости от типа стенда
 def loadDockerProperties(type) {
-	Properties props = new Properties()
-	def name = "${projectDir}/docker-${type}.properties"
-	println "Reading docker properties: ${name}"
-	if (new File(name).exists() ) {
-		props.load(new FileInputStream(name))
-	} else {
-		throw new IllegalStateException("Not found docker properties ${name} file.");
-	}
-	if (project.ext.stand_type == 'test') {
-		props.deploy_dir = props.deploy_dir + "_${System.currentTimeMillis()}"
-		props.data_dir = props.deploy_dir + "/data"
-		props.logs_dir = props.deploy_dir + "/logs"
-	}
-	return  props;
+  Properties props = new Properties()
+  def name = "${projectDir}/docker-${type}.properties"
+  println "Reading docker properties: ${name}"
+  if (new File(name).exists()) {
+    props.load(new FileInputStream(name))
+  } else {
+    throw new IllegalStateException("Not found docker properties ${name} file.");
+  }
+  if (project.ext.stand_type == 'test') {
+    props.deploy_dir = props.deploy_dir + "_${System.currentTimeMillis()}"
+    props.data_dir = props.deploy_dir + "/data"
+    props.logs_dir = props.deploy_dir + "/logs"
+  }
+  return props;
 }
 
 // тип стенда по-умолчанию
 // (может быть переопределён параметром к скрипту
 // 'gradle -Pstand_type=test')
 if (!project.ext.has('stand_type'))
-	project.ext.stand_type='development'
+  project.ext.stand_type = 'development'
 def props = loadDockerProperties(project.ext.stand_type)
 project.ext.stand = props
-
 
 // configure dependencies
 apply from: 'build_scripts/dependencies.gradle'
