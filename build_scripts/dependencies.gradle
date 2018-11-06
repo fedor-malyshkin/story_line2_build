@@ -294,6 +294,10 @@ project(':crawler') {
   dependencies {
     // sheduler enging
     compile 'org.quartz-scheduler:quartz:2.2.3'
+
+	// https://mvnrepository.com/artifact/berkeleydb/je
+	compile group: 'berkeleydb', name: 'je', version: '3.2.76'
+
     // feed parser
     compile 'com.rometools:rome:1.7.1'
     compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
