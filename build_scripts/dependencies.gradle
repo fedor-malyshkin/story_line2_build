@@ -292,11 +292,11 @@ project(':crawler') {
   }
 
   dependencies {
-    // sheduler enging
+    // scheduler engine
     compile 'org.quartz-scheduler:quartz:2.2.3'
 
-	// https://mvnrepository.com/artifact/berkeleydb/je
-	compile group: 'berkeleydb', name: 'je', version: '3.2.76'
+    // https://mvnrepository.com/artifact/berkeleydb/je
+    compile group: 'com.sleepycat', name: 'je', version: '18.3.1'
 
     // feed parser
     compile 'com.rometools:rome:1.7.1'
