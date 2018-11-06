@@ -1,5 +1,5 @@
 ---
-title: "Components: Grafana (Under construction)"
+title: "Components: Grafana"
 layout: post
 permalink: components/grafana
 ---

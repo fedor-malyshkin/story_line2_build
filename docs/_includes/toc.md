@@ -13,7 +13,7 @@
 	* [Service coordination (Zookeeper)]({{ site.baseurl}}{% link components/zookeeper.md %})
 	* [Time-series database (monitoring data) (InfluxDB)]({{ site.baseurl}}{% link components/influxdb.md %})
 	* [Metrics collector (Telegraf)]({{ site.baseurl}}{% link components/telegraf.md %})
-	* [Time-series visualization service (Grafana)]({{ site.baseurl}}{% link components/grafana.md %})
+	* [Monitoring visualization service (Grafana)]({{ site.baseurl}}{% link components/grafana.md %})
 	* [Reverse proxy/load-balancer (nginx)]({{ site.baseurl}}{% link components/nginx.md %})
 * [Monitoring Links]({{ site.baseurl}}{% link monitoring_links.md %})
 * Development
