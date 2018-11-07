@@ -259,6 +259,8 @@ project(':server_akka') {
   // javaLogLibrary(it)
   scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
 
+  mainClassName = "ru.nlp_project.story_line2.server_akka.Starter"
+
   dependencies {
     compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
     testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
@@ -452,6 +454,7 @@ project(':token') {
 def scalaProject(project, scalaLibVer) {
   project.ext.isScalaProject = true
   project.apply plugin: 'scala'
+  project.apply plugin: 'application'
 
   project.repositories {
     mavenCentral()

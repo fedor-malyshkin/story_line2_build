@@ -63,6 +63,9 @@ permalink: ports
 - __60000__ - java app debug port
 - __50000__ - jmx java app monitoring port
 
+# JMX monitoring
+- __40001__ - kafka (localhost-only) port
+
 # Deprecated
 - __8082__ - Storm UI port (deprectated)
 - __6627__ - Storm Numbus port (deprectated)
