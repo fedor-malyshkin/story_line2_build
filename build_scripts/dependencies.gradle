@@ -22,7 +22,7 @@ ext {
   ZOOKEEPER_VER = '3.4.13'
 
 // akkk
-  AKKA_VER = '2.5.15'
+  AKKA_VER = '2.5.18'
   AKKA_SCALA_VER = '2.12'
   AKKA_SCALA_LIBRARY_VER = '2.12.6'
   AKKA_SCALA_TEST_VER = '3.0.5'
@@ -263,6 +263,9 @@ project(':server_akka') {
 
   dependencies {
     compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
+    compile group: 'com.typesafe.akka', name: "akka-stream_${AKKA_SCALA_VER}", version: AKKA_VER
+    compile group: 'com.typesafe.akka', name: "akka-cluster_${AKKA_SCALA_VER}", version: AKKA_VER
+    compile group: 'com.typesafe.akka', name: "akka-cluster-sharding_${AKKA_SCALA_VER}", version: AKKA_VER
     testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
   }
 
