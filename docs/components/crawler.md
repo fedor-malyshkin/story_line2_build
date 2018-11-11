@@ -5,7 +5,7 @@ permalink: components/crawler
 ---
 **Description:** News site spider (crawler)
 
-**Technologies:** Implemented as microservice with one configuration file. Created with usage of [Spring](http://spring.io).
+**Technologies:** Implemented as microservice with one configuration file. Created with usage of [Spring](http://spring.io). Also used: **Java, Java 8, groovy, Kafka, Spring, Spring Boot, TDD**.
 
 **Git-repo:** [story_line2_crawler](https://github.com/fedor-malyshkin/story_line2_crawler)
 
