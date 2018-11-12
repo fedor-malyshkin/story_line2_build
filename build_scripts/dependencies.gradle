@@ -21,11 +21,12 @@ ext {
   KAFKA_VER = '2.0.0'
   ZOOKEEPER_VER = '3.4.13'
 
-// akkk
+// akka
   AKKA_VER = '2.5.18'
   AKKA_SCALA_VER = '2.12'
   AKKA_SCALA_LIBRARY_VER = '2.12.6'
   AKKA_SCALA_TEST_VER = '3.0.5'
+  ALPAKKA_KAFKA_VER='1.0-M1'
 
 // spark
   SPARK_VER = '2.3.1'
@@ -256,7 +257,7 @@ project(':analyser') {
 
 project(':server_akka') {
   scalaProject(it, AKKA_SCALA_LIBRARY_VER)
-  // javaLogLibrary(it)
+  javaLogLibrary(it)
   scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
 
   mainClassName = "ru.nlp_project.story_line2.server_akka.Starter"
@@ -266,7 +267,13 @@ project(':server_akka') {
     compile group: 'com.typesafe.akka', name: "akka-stream_${AKKA_SCALA_VER}", version: AKKA_VER
     compile group: 'com.typesafe.akka', name: "akka-cluster_${AKKA_SCALA_VER}", version: AKKA_VER
     compile group: 'com.typesafe.akka', name: "akka-cluster-sharding_${AKKA_SCALA_VER}", version: AKKA_VER
+    compile group: 'com.typesafe.akka', name: "akka-stream-kafka_${AKKA_SCALA_VER}", version: ALPAKKA_KAFKA_VER
+    // akka logging
+    compile group: 'com.typesafe.akka', name: "akka-slf4j_${AKKA_SCALA_VER}", version: AKKA_VER
+
     testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
+	testCompile group: 'com.typesafe.akka', name: "akka-stream-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
+    testCompile group: 'com.typesafe.akka', name: "akka-stream-kafka-testkit_${AKKA_SCALA_VER}", version: ALPAKKA_KAFKA_VER
   }
 
   task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
