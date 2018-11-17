@@ -11,7 +11,7 @@ ext {
   JSOUP_VER = '1.11.3'
   STORM_VER = '1.1.1'
   JODATIME_VER = '2.9.7'
-  ELASTICSEARCH_CLIENT_TRANSPORT_VER = '5.1.1'
+  ELASTICSEARCH_CLIENT_TRANSPORT_VER = '6.5.0'
   MONGO_JAVA_DRIVER_VER = '3.4.2'
   MONGO_SPARK_CONNECTOR_VER = '2.2.1'
   DAGGER_VER = '2.17'
@@ -20,26 +20,30 @@ ext {
   SPRING_BOOT_STARTER_VER = '2.0.4.RELEASE'
   KAFKA_VER = '2.0.0'
   ZOOKEEPER_VER = '3.4.13'
+  
+// scala
+  MACWIRE_VER = '2.3.1'
 
 // akka
   AKKA_VER = '2.5.18'
   AKKA_SCALA_VER = '2.12'
   AKKA_SCALA_LIBRARY_VER = '2.12.6'
-  AKKA_SCALA_TEST_VER = '3.0.5'
-  ALPAKKA_KAFKA_VER='1.0-M1'
+  ALPAKKA_KAFKA_VER = '1.0-M1'
 
 // spark
   SPARK_VER = '2.3.1'
   SPARK_SCALA_VER = '2.11'
+  SPARK_SCALA_LIBRARY_VER = '2.11.12'  
 
 // logging
   SLF4J_VER = '1.7.25'
   LOGBACK_VER = '1.2.3'
 
 // test scala
-  SPARK_SCALA_LIBRARY_VER = '2.11.12'
+  AKKA_SCALA_TEST_VER = '3.0.5'
   SPARK_SCALA_TEST_VER = '3.0.5'
   PEGDOWN_SCALA_TEST_VER = '1.6.0'
+  SCALA_MOCK_VER = '4.1.0'
 
 // my
   STORY_LINE2_GLR_PARSER_VER = '0.6'
@@ -160,7 +164,6 @@ project(':server_storm') {
       exclude module: 'log4j-slf4j-impl'
     }
     compile "joda-time:joda-time:${JODATIME_VER}"
-
     compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
     compile "org.jsoup:jsoup:${JSOUP_VER}"
     compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
@@ -169,7 +172,7 @@ project(':server_storm') {
     compile "ru.nlp_project.story_line2:config:${STORY_LINE2_CONFIG_VER}"
     compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VER}"
     compile "org.mongodb:mongo-java-driver:${MONGO_JAVA_DRIVER_VER}"
-    compile "org.elasticsearch.client:rest:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+    compile "org.elasticsearch.client:elasticsearch-rest-client:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
     compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
     compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
     compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
@@ -230,7 +233,7 @@ project(':server_storm') {
 }
 
 project(':analyser') {
-  scalaProject(it, SPARK_SCALA_LIBRARY_VER)
+  scalaProject(it, SPARK_SCALA_VER, SPARK_SCALA_LIBRARY_VER)
   // javaLogLibrary(it)
   scalaTestLibrary(it, SPARK_SCALA_VER, SPARK_SCALA_TEST_VER)
 
@@ -245,24 +248,19 @@ project(':analyser') {
     // compile "ru.nlp_project.story_line2:glr_parser:${STORY_LINE2_GLR_PARSER_VER}"
     // compile 'ru.nlp_project.story_line2:geo:0.1-SNAPSHOT'
   }
-
-
-  task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
-    main = 'org.scalatest.tools.Runner'
-    args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
-    classpath = sourceSets.test.runtimeClasspath
-  }
-  test.dependsOn scalaTest
 }
 
 project(':server_akka') {
-  scalaProject(it, AKKA_SCALA_LIBRARY_VER)
+  javaProject(it)
   javaLogLibrary(it)
+  javaTestLibrary(it)
+  scalaProject(it, AKKA_SCALA_VER, AKKA_SCALA_LIBRARY_VER)
   scalaTestLibrary(it, AKKA_SCALA_VER, AKKA_SCALA_TEST_VER)
 
   mainClassName = "ru.nlp_project.story_line2.server_akka.Starter"
 
   dependencies {
+	  // akka-related dependencies
     compile group: 'com.typesafe.akka', name: "akka-actor_${AKKA_SCALA_VER}", version: AKKA_VER
     compile group: 'com.typesafe.akka', name: "akka-stream_${AKKA_SCALA_VER}", version: AKKA_VER
     compile group: 'com.typesafe.akka', name: "akka-cluster_${AKKA_SCALA_VER}", version: AKKA_VER
@@ -272,17 +270,36 @@ project(':server_akka') {
     compile group: 'com.typesafe.akka', name: "akka-slf4j_${AKKA_SCALA_VER}", version: AKKA_VER
 
     testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
-	testCompile group: 'com.typesafe.akka', name: "akka-stream-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
+    testCompile group: 'com.typesafe.akka', name: "akka-stream-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     testCompile group: 'com.typesafe.akka', name: "akka-stream-kafka-testkit_${AKKA_SCALA_VER}", version: ALPAKKA_KAFKA_VER
+	// parsing
+	compile "joda-time:joda-time:${JODATIME_VER}"
+	compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
+	compile "org.jsoup:jsoup:${JSOUP_VER}"
+	// elasticsearch connection
+	compile "org.elasticsearch.client:elasticsearch-rest-client:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+	// metrics-related dependencies
+	compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
+	compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
+	compile "com.github.davidb:metrics-influxdb:${DROPWIZARD_METRICS_INFLUXDB_VER}"
+	// utils
+	compile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
+	compile "commons-io:commons-io:${COMMONS_IO_VER}"
+
   }
 
-  task scalaTest(dependsOn: ['testClasses'], type: JavaExec) {
-    main = 'org.scalatest.tools.Runner'
-    // http://www.scalatest.org/user_guide/using_the_runner
-    args = ['-R', 'build/classes/scala/test', '-oD', '-PS 4', '-h', 'build/reports/tests', '-u', 'build/test-results']
-    classpath = sourceSets.test.runtimeClasspath
-  }
-  test.dependsOn scalaTest
+// because we have mixed sources we need adjust sources to java and scala compiler
+// see: https://chrismarks.wordpress.com/2013/07/31/compiling-a-mixed-scala-project-with-gradle/
+sourceSets.main.scala.srcDir "src/main/java"
+sourceSets.main.java.srcDirs = []
+sourceSets.test.scala.srcDir "src/test/java"
+sourceSets.test.java.srcDirs = []
+
+// we disabled junit-test replacement (see 'com.github.maiflai.gradle-scalatest.mode' in gradle.properties)
+task allTests {
+    dependsOn test
+    dependsOn scalatest
+}
 
 }
 
@@ -441,7 +458,6 @@ project(':morph') {
 
 
   dependencies {
-//	    compile 'org.codehaus.woodstox:woodstox-core-lgpl:4.4.0'
     compile "commons-io:commons-io:${COMMONS_IO_VER}"
     compile 'net.sf.ehcache:ehcache-core:2.6.10'
     compile 'org.apache.commons:commons-lang3:3.3.2'
@@ -461,9 +477,10 @@ project(':token') {
   }
 }
 
-def scalaProject(project, scalaLibVer) {
+def scalaProject(project, scalaVer, scalaLibVer) {
   project.ext.isScalaProject = true
   project.apply plugin: 'scala'
+  project.apply plugin: "org.scoverage"
   project.apply plugin: 'application'
 
   project.repositories {
@@ -488,9 +505,29 @@ def scalaProject(project, scalaLibVer) {
     }
   }
 
-  project.dependencies {
-    compile "org.scala-lang:scala-library:${scalaLibVer}"
+  project.configurations {
+    provided
   }
+
+  project.sourceSets {
+    main.compileClasspath += project.configurations.provided
+    test.compileClasspath += project.configurations.provided
+    test.runtimeClasspath += project.configurations.provided
+  }
+
+  project.dependencies {
+    // https://mvnrepository.com/artifact/org.scoverage/scalac-scoverage-plugin
+    scoverage "org.scoverage:scalac-scoverage-plugin_${scalaVer}:1.3.1", "org.scoverage:scalac-scoverage-runtime_${scalaVer}:1.3.1"
+
+    compile "org.scala-lang:scala-library:${scalaLibVer}"
+    // DI
+    provided group: 'com.softwaremill.macwire', name: "macros_${scalaVer}", version: MACWIRE_VER
+  }
+
+  project.checkScoverage {
+    minimumRate = 0.0
+  }
+
 }
 
 
@@ -545,9 +582,12 @@ def javaTestLibrary(project) {
 }
 
 def scalaTestLibrary(project, scalaVer, scalaTestVer) {
+  project.apply plugin: "com.github.maiflai.scalatest"
+
   project.dependencies {
     testCompile "org.scalatest:scalatest_${scalaVer}:${scalaTestVer}"
-    testCompile "org.pegdown:pegdown:${PEGDOWN_SCALA_TEST_VER}"
+    testRuntime "org.pegdown:pegdown:${PEGDOWN_SCALA_TEST_VER}"
+    testCompile "org.scalamock:scalamock_${scalaVer}:${SCALA_MOCK_VER}"
 
     testCompile "org.apache.commons:commons-lang3:${COMMONS_LANG_VER}"
     testCompile "commons-io:commons-io:${COMMONS_IO_VER}"
