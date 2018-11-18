@@ -20,7 +20,7 @@ ext {
   SPRING_BOOT_STARTER_VER = '2.0.4.RELEASE'
   KAFKA_VER = '2.0.0'
   ZOOKEEPER_VER = '3.4.13'
-  
+
 // scala
   MACWIRE_VER = '2.3.1'
 
@@ -33,7 +33,7 @@ ext {
 // spark
   SPARK_VER = '2.3.1'
   SPARK_SCALA_VER = '2.11'
-  SPARK_SCALA_LIBRARY_VER = '2.11.12'  
+  SPARK_SCALA_LIBRARY_VER = '2.11.12'
 
 // logging
   SLF4J_VER = '1.7.25'
@@ -277,7 +277,12 @@ project(':server_akka') {
 	compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
 	compile "org.jsoup:jsoup:${JSOUP_VER}"
 	// elasticsearch connection
-	compile "org.elasticsearch.client:elasticsearch-rest-client:${ELASTICSEARCH_CLIENT_TRANSPORT_VER}"
+	compile 'com.sksamuel.elastic4s:elastic4s-core_2.12:6.3.7'
+	compile 'com.sksamuel.elastic4s:elastic4s-http_2.12:6.3.7'
+	//compile 'com.sksamuel.elastic4s:elastic4s-tests_2.12:6.3.7'
+	testCompile 'com.sksamuel.elastic4s:elastic4s-testkit_2.12:6.3.7'
+	testCompile 'com.sksamuel.elastic4s:elastic4s-embedded_2.12:6.3.7'
+	//compile 'com.sksamuel.elastic4s:elastic4s-scalaz_2.12:6.4.0'
 	// metrics-related dependencies
 	compile "io.dropwizard.metrics:metrics-core:${DROPWIZARD_METRICS_VER}"
 	compile "io.dropwizard.metrics:metrics-jvm:${DROPWIZARD_METRICS_VER}"
