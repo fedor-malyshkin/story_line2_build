@@ -213,7 +213,7 @@ allprojects {
   // **** uploading
   // upload to nexus/artifactory
   // good link: http://mike-neck.github.io/blog/2013/06/21/how-to-publish-artifacts-with-gradle-maven-publish-plugin-version-1-dot-6/
-  if (project(':crawler') != prj && project(':server_storm') != prj && project(':server_web') != prj) {
+  if (project(':crawler') != prj && project(':server_web') != prj && project(':server_akka') != prj) {
     apply plugin: 'maven-publish'
     publishing {
       publications {
@@ -248,7 +248,6 @@ allprojects {
   task deploy(dependsOn: publish) {
     description "Install in remote repo"
   }
-
 
   gitByTagVersion.dependsOn build
   gitPush.dependsOn gitByTagVersion

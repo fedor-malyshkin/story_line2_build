@@ -9,7 +9,6 @@ permalink: ports
 - __3000__ - monit
 
 # Monitoring
-- __25826__ - _collectd port (deprectated)_
 - __8086__ - InfluxDB port
 - __9086__ - InfluxDB port (RPC)
 - __8081__ - Grafana
@@ -29,6 +28,7 @@ permalink: ports
 - __8002__ - __server_web__ admin port
 - __8088__ - __crawler__ application port
 - __8089__ - __crawler__ admin port
+- __8011__ - __server_web__ application port
 
 # Spark cluster
 - __7077__ - Spark Master port
@@ -38,7 +38,7 @@ permalink: ports
 
 # Hadoop: HDFS
 - __50010 (http)__ - The datanode server address and port for data transfer (Internal, `dfs.datanode.address`)
-- __50075 (http)__ - The datanode http server address and port.  (External, `dfs.datanode.http.address`)
+- __50075 (http)__ - The datanode http server address and port.  (Internal, `dfs.datanode.http.address`)
 - __50475 (https)__ - The datanode secure http server address and port. (Internal, `dfs.datanode.https.address`)
 - __50020 (IPC)__ - The datanode ipc server address and port.  (Internal, `dfs.datanode.ipc.address`)
 - __50070 (http)__ - The address and the base port where the dfs namenode web ui will listen on.   (External, `dfs.namenode.http-address`)
@@ -58,6 +58,14 @@ permalink: ports
 - __8042 (http)__ - NM Webapp address (External, `yarn.nodemanager.webapp.address`)
 - __8044 (https)__ - The https adddress of the NM web application.  (Internal, `yarn.nodemanager.webapp.https.address`)
 - __13562 (http)__ - Default port that the ShuffleHandler will run on. ShuffleHandler is a service run at the NodeManager to facilitate transfers of intermediate Map outputs to requesting Reducers. (Internal, `mapreduce.shuffle.port`)
+
+# Hive
+- __9083__ - Hive's metastore Thrify protocol's port (Internal)
+- __10001__ - HiveServer2 Thrift RPC messages over HTTP (Internal, `hive.server2.thrift.http.port`, `hive.server2.thrift.http.path`)
+- __10002__ - Web UI for HiveServer2 (Internal, `hive.server2.webui.host`, `hive.server2.webui.port`)
+
+# MySQL
+- __3306__ - default MySQL connection port (Internal)
 
 # Debugging
 - __60000__ - java app debug port

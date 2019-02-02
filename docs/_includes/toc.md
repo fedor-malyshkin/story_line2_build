@@ -6,6 +6,7 @@
 	* [Crawler (Spring Boot, Java)]({{ site.baseurl}}{% link components/crawler.md %})
 	* [Message Broker (Kafka)]({{ site.baseurl}}{% link components/kafka.md %})
 	* [Distributed file storage (Hadoop's HDFS)]({{ site.baseurl}}{% link components/hadoop-hdfs.md %})
+	* [Data warehouse (Apache Hive)]({{ site.baseurl}}{% link components/hadoop-hive.md %})
 	* [Distributed business logic cluster (Akka, Scala)]({{ site.baseurl}}{% link components/akka.md %})
 	* [Distributed data processing cluster (Spark, Scala)]({{ site.baseurl}}{% link components/spark.md %})
 	* [Indexing/Search engine (Elasticsearch)]({{ site.baseurl}}{% link components/elasticsearch.md %})

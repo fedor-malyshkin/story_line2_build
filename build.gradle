@@ -15,15 +15,15 @@ buildscript {
     // spring-boot
     classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
     // shadow-plugin (http://imperceptiblethoughts.com/shadow/)
-    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
     // annotation processor https://plugins.gradle.org/plugin/net.ltgt.apt
-    classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.20"
     // lombok
-    classpath "io.franzbecker:gradle-lombok:1.14"
+    classpath "io.franzbecker:gradle-lombok:2.0"
     // scoverage
-    classpath "gradle.plugin.org.scoverage:gradle-scoverage:2.5.0"
-    // scalatest plugin
-    classpath "gradle.plugin.com.github.maiflai:gradle-scalatest:0.19"
+    // classpath "gradle.plugin.org.scoverage:gradle-scoverage:2.5.0"
+    // scalatest plugin https://login.gradle.org/plugin/com.github.maiflai.scalatest
+    classpath "gradle.plugin.com.github.maiflai:gradle-scalatest:0.23"
   }
 }
 
