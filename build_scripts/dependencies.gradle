@@ -25,6 +25,7 @@ ext {
   MACWIRE_VER = '2.3.1'
   CATS_VER = '1.5.0-RC0'
   ELASTIC4S_VER = '6.3.7'
+  CIRCE_VER = '0.11.1'
 
 // akka
   AKKA_VER = '2.5.18'
@@ -226,6 +227,7 @@ project(':server_akka') {
     testCompile group: 'com.typesafe.akka', name: "akka-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     testCompile group: 'com.typesafe.akka', name: "akka-stream-testkit_${AKKA_SCALA_VER}", version: AKKA_VER
     testCompile group: 'com.typesafe.akka', name: "akka-stream-kafka-testkit_${AKKA_SCALA_VER}", version: ALPAKKA_KAFKA_VER
+
     // parsing
     compile "joda-time:joda-time:${JODATIME_VER}"
     compile "org.codehaus.groovy:groovy:${GROOVY_VER}"
@@ -245,6 +247,9 @@ project(':server_akka') {
     compile "commons-io:commons-io:${COMMONS_IO_VER}"
     // https://mvnrepository.com/artifact/org.typelevel/cats-core
     compile group: 'org.typelevel', name: "cats-core_${AKKA_SCALA_VER}", version: "${CATS_VER}"
+	// https://mvnrepository.com/artifact/io.circe/circe-parser
+	compile group: 'io.circe', name: "circe-parser_${AKKA_SCALA_VER}", version: CIRCE_VER
+	compile group: 'io.circe', name: "circe-generic_${AKKA_SCALA_VER}", version: CIRCE_VER
 
   }
 
