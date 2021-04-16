@@ -13,22 +13,19 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
+
 title: "'Story Line 2' Project's Site"
 url: "https://fedor-malyshkin.github.io/story_line2_build/" # the base hostname & protocol for your site, e.g. http://example.com
 social:
   name: Fedor Malyshkin
   links:
     - https://www.linkedin.com/in/fedor-malyshkin/
-    - https://habrahabr.ru/users/fedor_malyshkin/
-    - https://moikrug.ru/fedor-malyshkin
     - https://github.com/fedor-malyshkin
 lang: en_US
 
 # Contact data
 github_link: https://github.com/fedor-malyshkin
 linkedin_link: https://linkedin.com/in/fedor-malyshkin/
-habrahabr_link: https://habrahabr.ru/users/fedor_malyshkin/
-moikrug_link: https://moikrug.ru/fedor-malyshkin
 telegram_link: https://t.me/fedor_malyshkin
 telegram_user: "@fedor_malyshkin"
 contact_email: fedor.malyshkin@gmail.com
@@ -49,12 +46,11 @@ sass:
 # End
 
 # Gem settings
-gems:
+plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-avatar
-  - jekyll-github-metadata
   - jekyll-gist
 
 exclude:
