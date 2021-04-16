@@ -3,6 +3,16 @@ title: A little bit info about history of this project...
 layout: post
 ---
 
+# Disclaimer
+```
+Because I don't have enough time for this project anymore (and I've cancelled my hosting subscription)  - most of the links to services are dead. However, I decided to keep this repo and simply don't publish links to it.
+
+I'm a little bit ashamed for some code in it :((( 
+
+How many projects have suffered this fate!!.... 
+```
+
+# Main part
 When I thought about how to use in practice all technologies I studied last years - I have decided to create project which could include all my interests:
 
 * a lot of data,

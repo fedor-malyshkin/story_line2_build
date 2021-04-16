@@ -2,9 +2,11 @@
 Full description (and link to other submodules) could be found in [main project page](https://fedor-malyshkin.github.io/story_line2_build/)
 
 # Disclaimer
-Because I've cancelled my hosting subscription - most links to services are dead. However, I decided to keep this repo and don't publish links to it. 
+Because I don't have enough time for this project anymore (and I've cancelled my hosting subscription)  - most of the links to services are dead. However, I decided to keep this repo and simply don't publish links to it.
 
-**In fact, I'm a little bit ashamed for some code in it :(((**  
+I'm a little bit ashamed for some code in it :((( 
+
+How many projects have suffered this fate!!.... 
 
 ## Local testing (with Docker)
 
